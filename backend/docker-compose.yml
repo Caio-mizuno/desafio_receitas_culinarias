@@ -1,0 +1,74 @@
+version: "3.8"
+services:
+  # image project
+  backend-nest:
+    build:
+      target: app-dev
+      context: .
+      args:
+        APP_BASE_DIR: ${APP_BASE_DIR-.}
+        COMPOSER_AUTH: "{}"
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./docker/supervisor/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ${APP_BASE_DIR-.}:/app
+      - /app/node_modules
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      - backend-nest-mysql
+    networks:
+      - nest
+
+  # nginx
+  backend-nest-web:
+    build:
+      context: .
+      target: web-dev
+      args:
+        APP_BASE_DIR: ${APP_BASE_DIR-.}
+    restart: unless-stopped
+    ports:
+      - "9561:8080"
+    volumes:
+      - ${APP_BASE_DIR-.}:/app/public
+      - ${APP_BASE_DIR-.}/docker/logs/nginx:/var/log/nginx
+    environment:
+      NESTJS_HOST: backend-nest
+      NESTJS_PORT: 3000
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 724M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    depends_on:
+      - backend-nest
+    networks:
+      - nest
+
+  # mysql container
+  backend-nest-mysql:
+    image: mysql:latest
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123123"
+      MYSQL_DATABASE: teste_receitas_rg_sistemas
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    ports:
+      - "10000:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - nest
+
+networks:
+  nest:
+    driver: bridge

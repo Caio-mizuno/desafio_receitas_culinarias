@@ -1,0 +1,101 @@
+import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
+import type { Category } from '@/types/recipe.types'
+import type { DefaultResponse } from '@/types/auth.types'
+import apiClient from '@/plugins/axios'
+
+export const useCategoryStore = defineStore('category', () => {
+  const categories = ref<Category[]>([])
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+
+  const categoryOptions = computed(() =>
+    categories.value.map(cat => ({
+      text: cat.nome,
+      value: cat.id,
+    }))
+  )
+
+  const fetchCategories = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.get<DefaultResponse<Category[]>>('/categories')
+      categories.value = response.data.response
+      return { success: true }
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Erro ao buscar categorias'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const createCategory = async (category: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.post<DefaultResponse<Category>>('/categories', category)
+      categories.value.push(response.data.response)
+      return { success: true }
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Erro ao criar categoria'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const updateCategory = async (id: number, category: Partial<Category>) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.put<DefaultResponse<Category>>(`/categories/${id}`, category)
+      const index = categories.value.findIndex(c => c.id === id)
+      if (index !== -1) {
+        categories.value[index] = response.data.response
+      }
+      return { success: true }
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Erro ao atualizar categoria'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deleteCategory = async (id: number) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      await apiClient.delete(`/categories/${id}`)
+      categories.value = categories.value.filter(c => c.id !== id)
+      return { success: true }
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Erro ao excluir categoria'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const clearError = () => {
+    error.value = null
+  }
+
+  return {
+    categories,
+    loading,
+    error,
+    categoryOptions,
+    fetchCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    clearError,
+  }
+})

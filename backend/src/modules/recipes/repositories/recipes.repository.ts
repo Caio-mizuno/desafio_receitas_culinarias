@@ -1,0 +1,52 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Recipe } from '../entities/recipe.entity';
+
+@Injectable()
+export class RecipesRepository {
+  constructor(
+    @InjectRepository(Recipe)
+    private readonly typeOrmRepository: Repository<Recipe>,
+  ) {}
+
+  createEntity(dto: Partial<Recipe>): Recipe {
+    return this.typeOrmRepository.create(dto);
+  }
+
+  async save(recipe: Recipe): Promise<Recipe> {
+    return this.typeOrmRepository.save(recipe);
+  }
+
+  async findAll(query?: {
+    categoriaId?: number;
+    nome?: string;
+  }): Promise<Recipe[]> {
+    const qb = this.typeOrmRepository.createQueryBuilder('recipe');
+    qb.leftJoinAndSelect('recipe.categoria', 'categoria');
+    qb.leftJoinAndSelect('recipe.usuario', 'usuario');
+
+    if (query?.categoriaId) {
+      qb.andWhere('recipe.categoriaId = :categoriaId', {
+        categoriaId: query.categoriaId,
+      });
+    }
+
+    if (query?.nome) {
+      qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
+    }
+
+    return qb.getMany();
+  }
+
+  async findById(id: number): Promise<Recipe | null> {
+    return this.typeOrmRepository.findOne({
+      where: { id },
+      relations: ['categoria', 'usuario'],
+    });
+  }
+
+  async remove(recipe: Recipe): Promise<Recipe> {
+    return this.typeOrmRepository.remove(recipe);
+  }
+}
