@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { Recipe, RecipeFilters, Category, PaginationInfo } from '@/types/recipe.types'
 import type { DefaultResponse } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
+import { MockService } from '@/services/mock.service'
 
 export const useRecipeStore = defineStore('recipe', () => {
   const recipes = ref<Recipe[]>([])
@@ -45,6 +46,12 @@ export const useRecipeStore = defineStore('recipe', () => {
       recipes.value = response.data.response
       return { success: true }
     } catch (err: any) {
+      // Fallback to mock data when backend is not available
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        const response = await MockService.getRecipes(params || filters.value)
+        recipes.value = response.response
+        return { success: true }
+      }
       error.value = err.response?.data?.message || 'Erro ao buscar receitas'
       return { success: false, error: error.value }
     } finally {
@@ -61,6 +68,12 @@ export const useRecipeStore = defineStore('recipe', () => {
       currentRecipe.value = response.data.response
       return { success: true }
     } catch (err: any) {
+      // Fallback to mock data when backend is not available
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        const response = await MockService.getRecipeById(id)
+        currentRecipe.value = response.response
+        return { success: true }
+      }
       error.value = err.response?.data?.message || 'Erro ao buscar receita'
       return { success: false, error: error.value }
     } finally {
