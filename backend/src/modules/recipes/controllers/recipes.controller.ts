@@ -10,7 +10,12 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiTags,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { RecipesService } from '../services/recipes.service';
 import { CreateRecipeDto, UpdateRecipeDto } from '../dto/recipe.dto';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
@@ -30,7 +35,10 @@ export class RecipesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
-  @ApiOkResponse({ description: 'Receita criada com sucesso', type: RecipeCreateOkResponseDto })
+  @ApiOkResponse({
+    description: 'Receita criada com sucesso',
+    type: RecipeCreateOkResponseDto,
+  })
   create(@Body() createRecipeDto: CreateRecipeDto, @Request() req) {
     return this.recipesService
       .create(createRecipeDto, req.user)
@@ -44,22 +52,31 @@ export class RecipesController {
   @Get()
   @ApiQuery({ name: 'categoriaId', required: false, type: Number })
   @ApiQuery({ name: 'nome', required: false, type: String })
-  @ApiOkResponse({ description: 'Receitas listadas com sucesso', type: RecipesListOkResponseDto })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOkResponse({
+    description: 'Receitas listadas com sucesso',
+    type: RecipesListOkResponseDto,
+  })
   findAll(
     @Query('categoriaId') categoriaId?: number,
     @Query('nome') nome?: string,
+    @Query('limit') limit?: number,
   ) {
     return this.recipesService
-      .findAll({ categoriaId, nome })
+      .findAll({ categoriaId, nome, limit })
       .then(
         (res) =>
           new DefaultResponseDto(res, 'Receitas listadas com sucesso', true),
-      );
+      )
+      .catch((err) => new DefaultResponseDto(err.message,'Erro ao listar',false));
   }
 
   @Public()
   @Get(':id')
-  @ApiOkResponse({ description: 'Receita encontrada com sucesso', type: RecipeGetOkResponseDto })
+  @ApiOkResponse({
+    description: 'Receita encontrada com sucesso',
+    type: RecipeGetOkResponseDto,
+  })
   findOne(@Param('id') id: string) {
     return this.recipesService
       .findOne(+id)
@@ -72,7 +89,10 @@ export class RecipesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  @ApiOkResponse({ description: 'Receita atualizada com sucesso', type: RecipeUpdateOkResponseDto })
+  @ApiOkResponse({
+    description: 'Receita atualizada com sucesso',
+    type: RecipeUpdateOkResponseDto,
+  })
   update(
     @Param('id') id: string,
     @Body() updateRecipeDto: UpdateRecipeDto,
@@ -89,7 +109,10 @@ export class RecipesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiOkResponse({ description: 'Receita removida com sucesso', type: RecipeRemoveOkResponseDto })
+  @ApiOkResponse({
+    description: 'Receita removida com sucesso',
+    type: RecipeRemoveOkResponseDto,
+  })
   remove(@Param('id') id: string, @Request() req) {
     return this.recipesService
       .remove(+id, req.user)

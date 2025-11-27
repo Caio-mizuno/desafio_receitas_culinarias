@@ -27,7 +27,7 @@ export const useCategoryStore = defineStore('category', () => {
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
         const response = await MockService.getCategories()
         categories.value = response.response
         return { success: true }

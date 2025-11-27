@@ -23,6 +23,7 @@ export class RecipesService {
   async findAll(query?: {
     categoriaId?: number;
     nome?: string;
+    limit?: number;
   }): Promise<Recipe[]> {
     return this.recipeRepository.findAll(query);
   }

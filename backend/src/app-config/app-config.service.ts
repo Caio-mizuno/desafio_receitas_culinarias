@@ -56,4 +56,18 @@ export class AppConfigService {
   get jwtSecret(): string {
     return this.config.get<string>('JWT_SECRET');
   }
+
+  get corsOrigins(): string[] {
+    const raw = this.config.get<string>('CORS_ORIGINS');
+    if (!raw) return [];
+    return raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+  }
+
+  get corsCredentials(): boolean {
+    const raw = this.config.get<string>('CORS_CREDENTIALS');
+    return raw === 'true' || raw === '1';
+  }
 }

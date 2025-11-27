@@ -21,10 +21,12 @@ export class RecipesRepository {
   async findAll(query?: {
     categoriaId?: number;
     nome?: string;
+    limit?: number;
   }): Promise<Recipe[]> {
     const qb = this.typeOrmRepository.createQueryBuilder('recipe');
     qb.leftJoinAndSelect('recipe.categoria', 'categoria');
     qb.leftJoinAndSelect('recipe.usuario', 'usuario');
+    qb.orderBy('recipe.criadoEm', 'DESC');
 
     if (query?.categoriaId) {
       qb.andWhere('recipe.categoriaId = :categoriaId', {
@@ -35,7 +37,9 @@ export class RecipesRepository {
     if (query?.nome) {
       qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
     }
-
+    if (query?.limit && query.limit > 0) {
+      qb.take(query.limit);
+    }
     return qb.getMany();
   }
 

@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import 'vuetify/styles'
 import { createPinia } from 'pinia'
 import vuetify from './plugins/vuetify'
 import './plugins/axios'
