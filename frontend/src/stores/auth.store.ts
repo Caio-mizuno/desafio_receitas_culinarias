@@ -17,15 +17,16 @@ export const useAuthStore = defineStore('auth', () => {
 
     try {
       const response = await apiClient.post<DefaultResponse<AuthResponse>>('/auth/login', credentials)
-      const { access_token, expires_in } = response.data.response
+      const { access_token } = response.data.response
 
       token.value = access_token
       localStorage.setItem('auth_token', access_token)
 
-      // Simular dados do usuário (em produção, vir do backend)
-      user.value = {
-        id: 1,
-        login: credentials.login,
+      try {
+        const profile = await apiClient.get<DefaultResponse<User>>('/users/profile')
+        user.value = profile.data.response
+      } catch {
+        user.value = { id: 1, login: credentials.login }
       }
 
       return { success: true }

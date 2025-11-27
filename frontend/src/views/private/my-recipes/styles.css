@@ -1,0 +1,9 @@
+.recipe-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.recipe-card:hover {
+  transform: translateY(-4px);
+}
+

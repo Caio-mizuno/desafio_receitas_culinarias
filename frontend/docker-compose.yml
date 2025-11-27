@@ -1,0 +1,25 @@
+services:
+  samulife-vue:
+    container_name: samulife-vue
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/project:delegate
+      - /project/node_modules
+    restart: unless-stopped
+    platform: linux/x86_64
+    extra_hosts:
+          - "host.docker.internal:host-gateway"
+    ports:
+      - 9011:9011
+    environment:
+      - NODE_ENV=development
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 4G
+        reservations:
+          cpus: '4'
+          memory: 4G

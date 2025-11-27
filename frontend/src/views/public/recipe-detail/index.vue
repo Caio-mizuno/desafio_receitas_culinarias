@@ -2,26 +2,18 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-btn
-          color="secondary"
-          variant="text"
-          prepend-icon="mdi-arrow-left"
-          @click="goBack"
-          class="mb-4"
-        >
+        <v-btn color="secondary" variant="text" prepend-icon="mdi-arrow-left" @click="goBack" class="mb-4">
           Voltar
         </v-btn>
       </v-col>
     </v-row>
 
-    <!-- Loading -->
     <v-row v-if="recipeStore.loading">
       <v-col cols="12">
         <v-skeleton-loader type="card, article, list-item-three-line" />
       </v-col>
     </v-row>
 
-    <!-- Recipe Detail -->
     <v-row v-else-if="recipe">
       <v-col cols="12">
         <v-card elevation="4">
@@ -36,7 +28,6 @@
           </v-img>
 
           <v-card-text class="pa-6">
-            <!-- Informações Rápidas -->
             <v-row class="mb-6">
               <v-col cols="12" sm="4" class="text-center">
                 <v-icon size="32" color="primary" class="mb-2">mdi-clock-outline</v-icon>
@@ -57,7 +48,6 @@
 
             <v-divider class="mb-6" />
 
-            <!-- Ingredientes -->
             <v-expansion-panels class="mb-6">
               <v-expansion-panel>
                 <v-expansion-panel-title>
@@ -67,9 +57,7 @@
                       <span class="text-h6">Ingredientes</span>
                       <v-spacer />
                       <v-fade-transition>
-                        <v-chip v-if="!expanded" color="primary" size="small">
-                          Clique para ver
-                        </v-chip>
+                        <v-chip v-if="!expanded" color="primary" size="small">Clique para ver</v-chip>
                       </v-fade-transition>
                     </v-row>
                   </template>
@@ -82,7 +70,6 @@
               </v-expansion-panel>
             </v-expansion-panels>
 
-            <!-- Modo de Preparo -->
             <v-expansion-panels class="mb-6">
               <v-expansion-panel>
                 <v-expansion-panel-title>
@@ -92,9 +79,7 @@
                       <span class="text-h6">Modo de Preparo</span>
                       <v-spacer />
                       <v-fade-transition>
-                        <v-chip v-if="!expanded" color="primary" size="small">
-                          Clique para ver
-                        </v-chip>
+                        <v-chip v-if="!expanded" color="primary" size="small">Clique para ver</v-chip>
                       </v-fade-transition>
                     </v-row>
                   </template>
@@ -107,18 +92,11 @@
               </v-expansion-panel>
             </v-expansion-panels>
 
-            <!-- Informações Adicionais -->
             <v-row v-if="recipe.createdAt">
               <v-col cols="12">
-                <v-alert
-                  type="info"
-                  variant="tonal"
-                  icon="mdi-information-outline"
-                >
+                <v-alert type="info" variant="tonal" icon="mdi-information-outline">
                   <template #text>
-                    <div class="text-caption">
-                      Receita criada em: {{ formatDate(recipe.createdAt) }}
-                    </div>
+                    <div class="text-caption">Receita criada em: {{ formatDate(recipe.createdAt) }}</div>
                   </template>
                 </v-alert>
               </v-col>
@@ -128,19 +106,12 @@
       </v-col>
     </v-row>
 
-    <!-- Error State -->
     <v-row v-else-if="recipeStore.error">
       <v-col cols="12" class="text-center">
         <v-icon size="128" color="error" class="mb-4">mdi-alert-circle-outline</v-icon>
         <h3 class="text-h5 text-error">Erro ao carregar receita</h3>
         <p class="text-body-1 text-grey">{{ recipeStore.error }}</p>
-        <v-btn
-          color="primary"
-          @click="fetchRecipe"
-          class="mt-4"
-        >
-          Tentar Novamente
-        </v-btn>
+        <v-btn color="primary" @click="fetchRecipe" class="mt-4">Tentar Novamente</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -151,6 +122,7 @@ import { computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useRecipeStore } from '@/stores/recipe.store'
 import { useCategoryStore } from '@/stores/category.store'
+import './styles.css'
 
 const router = useRouter()
 const route = useRoute()
@@ -184,20 +156,8 @@ const formatDate = (dateString: string) => {
 onMounted(async () => {
   await Promise.all([
     fetchRecipe(),
-    categoryStore.fetchCategories()
+    categoryStore.fetchCategories(),
   ])
 })
 </script>
 
-<style scoped>
-.bg-gradient-primary {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.9) 0%, rgba(76, 175, 80, 0.7) 100%);
-  color: white !important;
-}
-
-.ingredients-content,
-.preparation-content {
-  white-space: pre-line;
-  line-height: 1.6;
-}
-</style>

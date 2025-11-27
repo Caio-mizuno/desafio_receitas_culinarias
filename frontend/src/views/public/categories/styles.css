@@ -1,0 +1,10 @@
+.category-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  height: 100%;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+}
+

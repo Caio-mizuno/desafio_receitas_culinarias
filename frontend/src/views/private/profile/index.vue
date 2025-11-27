@@ -79,31 +79,10 @@
 
           <v-card-text>
             <v-list>
-              <v-list-item
-                prepend-icon="mdi-book-outline"
-                title="Minhas Receitas"
-                subtitle="Gerenciar suas receitas"
-                @click="goToMyRecipes"
-                link
-              />
-
-              <v-list-item
-                prepend-icon="mdi-plus-circle-outline"
-                title="Criar Nova Receita"
-                subtitle="Adicionar uma nova receita"
-                @click="goToCreateRecipe"
-                link
-              />
-
+              <v-list-item prepend-icon="mdi-book-outline" title="Minhas Receitas" subtitle="Gerenciar suas receitas" @click="goToMyRecipes" link />
+              <v-list-item prepend-icon="mdi-plus-circle-outline" title="Criar Nova Receita" subtitle="Adicionar uma nova receita" @click="goToCreateRecipe" link />
               <v-divider />
-
-              <v-list-item
-                prepend-icon="mdi-logout"
-                title="Sair"
-                subtitle="Encerrar sessão"
-                @click="handleLogout"
-                link
-              />
+              <v-list-item prepend-icon="mdi-logout" title="Sair" subtitle="Encerrar sessão" @click="handleLogout" link />
             </v-list>
           </v-card-text>
         </v-card>
@@ -153,3 +132,4 @@ onMounted(async () => {
   ])
 })
 </script>
+

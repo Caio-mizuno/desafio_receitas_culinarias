@@ -1,9 +1,5 @@
 <template>
-  <v-app-bar
-    color="primary"
-    elevation="4"
-    prominent
-  >
+  <v-app-bar color="primary" elevation="4" prominent>
     <v-app-bar-nav-icon @click="drawer = !drawer" />
 
     <v-app-bar-title>
@@ -11,74 +7,68 @@
       Receitas Culinárias
     </v-app-bar-title>
 
-    <v-spacer />
+    <template v-if="authStore.isAuthenticated">
+      <v-tabs v-model="activeTab" bg-color="primary" class="ml-4" density="comfortable">
+        <v-tab value="minhas" @click="goToMyRecipes">
+          <v-icon start>mdi-book-outline</v-icon>
+          Minhas Receitas
+        </v-tab>
+        <v-tab value="nova" @click="goToCreateRecipe">
+          <v-icon start>mdi-plus</v-icon>
+          Nova Receita
+        </v-tab>
+        <v-tab value="perfil" @click="goToProfile">
+          <v-icon start>mdi-account-outline</v-icon>
+          Perfil
+        </v-tab>
+      </v-tabs>
 
-    <!-- Menu do Usuário -->
-    <v-menu v-if="authStore.isAuthenticated" location="bottom">
-      <template #activator="{ props }">
-        <v-btn
-          v-bind="props"
-          icon
-          variant="text"
-        >
-          <v-avatar color="secondary" size="32">
-            <v-icon>mdi-account</v-icon>
-          </v-avatar>
-        </v-btn>
-      </template>
+      <v-spacer />
 
-      <v-card min-width="200">
-        <v-card-text class="text-center pb-2">
-          <v-avatar color="secondary" size="48" class="mb-2">
-            <v-icon size="24">mdi-account</v-icon>
-          </v-avatar>
-          <div class="text-subtitle-1 font-weight-medium">
-            {{ authStore.user?.login || 'Usuário' }}
-          </div>
-        </v-card-text>
-
-        <v-divider />
-
-        <v-list density="compact">
-          <v-list-item
-            prepend-icon="mdi-account-outline"
-            title="Meu Perfil"
-            @click="goToProfile"
-          />
-          <v-list-item
-            prepend-icon="mdi-book-outline"
-            title="Minhas Receitas"
-            @click="goToMyRecipes"
-          />
-        </v-list>
-
-        <v-divider />
-
-        <v-card-actions>
-          <v-btn
-            color="error"
-            variant="text"
-            block
-            @click="handleLogout"
-            :loading="authStore.loading"
-          >
-            <v-icon start>mdi-logout</v-icon>
-            Sair
+      <v-menu location="bottom">
+        <template #activator="{ props }">
+          <v-btn v-bind="props" icon variant="text">
+            <v-avatar color="secondary" size="32">
+              <v-icon>mdi-account</v-icon>
+            </v-avatar>
           </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-menu>
+        </template>
 
-    <!-- Botão Login -->
-    <v-btn
-      v-else
-      color="secondary"
-      variant="elevated"
-      @click="goToLogin"
-    >
-      <v-icon start>mdi-login</v-icon>
-      Entrar
-    </v-btn>
+        <v-card min-width="200">
+          <v-card-text class="text-center pb-2">
+            <v-avatar color="secondary" size="48" class="mb-2">
+              <v-icon size="24">mdi-account</v-icon>
+            </v-avatar>
+            <div class="text-subtitle-1 font-weight-medium">
+              {{ authStore.user?.login || 'Usuário' }}
+            </div>
+          </v-card-text>
+
+          <v-divider />
+
+          <v-list density="compact">
+            <v-list-item prepend-icon="mdi-account-outline" title="Meu Perfil" @click="goToProfile" />
+            <v-list-item prepend-icon="mdi-book-outline" title="Minhas Receitas" @click="goToMyRecipes" />
+          </v-list>
+
+          <v-divider />
+
+          <v-card-actions>
+            <v-btn color="error" variant="text" block @click="handleLogout" :loading="authStore.loading">
+              <v-icon start>mdi-logout</v-icon>
+              Sair
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
+    </template>
+    <template v-else>
+      <v-spacer />
+      <v-btn color="secondary" variant="elevated" @click="goToLogin">
+        <v-icon start>mdi-login</v-icon>
+        Entrar
+      </v-btn>
+    </template>
   </v-app-bar>
 
   <!-- Navigation Drawer -->
@@ -125,6 +115,7 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const drawer = ref(false)
+const activeTab = ref('')
 
 const goToHome = () => {
   drawer.value = false
@@ -157,5 +148,10 @@ const goToLogin = () => {
 const handleLogout = async () => {
   await authStore.logout()
   router.push('/')
+}
+
+const goToCreateRecipe = () => {
+  drawer.value = false
+  router.push('/minhas-receitas/nova')
 }
 </script>

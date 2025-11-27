@@ -45,7 +45,6 @@ export class AuthController {
   @ApiBadRequestResponse({
     description: 'Dados de entrada inválidos (falha de validação)',
   })
-
   @HandleErrors()
   async signIn(@Body() signInDto: LoginDto) {
     const result = await this.authService.signIn(

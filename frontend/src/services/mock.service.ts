@@ -185,10 +185,10 @@ export class MockService {
       ...mockRecipes[index],
       ...recipe,
       updatedAt: new Date().toISOString()
-    }
+    } as Recipe
 
     return {
-      response: mockRecipes[index],
+      response: mockRecipes[index] as Recipe,
       message: 'Receita atualizada com sucesso',
       status: true
     }
@@ -252,10 +252,10 @@ export class MockService {
       ...mockCategories[index],
       ...category,
       updatedAt: new Date().toISOString()
-    }
+    } as Category
 
     return {
-      response: mockCategories[index],
+      response: mockCategories[index] as Category,
       message: 'Categoria atualizada com sucesso',
       status: true
     }

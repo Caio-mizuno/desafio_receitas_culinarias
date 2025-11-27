@@ -1,4 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UserModule } from './modules/users/user.module';
@@ -11,6 +12,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { RecipesModule } from './modules/recipes/recipes.module';
 import { Category } from './modules/categories/entities/category.entity';
 import { Recipe } from './modules/recipes/entities/recipe.entity';
+import { JwtAuthGuard } from './modules/authentication/guards/auth.guard';
 
 @Module({
   imports: [
@@ -67,7 +69,13 @@ import { Recipe } from './modules/recipes/entities/recipe.entity';
     RecipesModule,
   ],
   controllers: [],
-  providers: [MigrationService],
+  providers: [
+    MigrationService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(private migrationService: MigrationService) {}

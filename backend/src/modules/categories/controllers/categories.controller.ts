@@ -8,7 +8,14 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CategoriesService } from '../services/categories.service';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
@@ -29,7 +36,18 @@ export class CategoriesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
-  @ApiOkResponse({ description: 'Categoria criada com sucesso', type: CategoryCreateOkResponseDto })
+  @ApiOperation({
+    summary: 'Cria uma nova categoria',
+    description: 'Cria uma nova categoria com base nos dados fornecidos.',
+  })
+  @ApiBody({
+    type: CreateCategoryDto,
+    description: 'Dados da categoria para criação',
+  })
+  @ApiOkResponse({
+    description: 'Categoria criada com sucesso',
+    type: CategoryCreateOkResponseDto,
+  })
   @HandleErrors()
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService
@@ -42,7 +60,14 @@ export class CategoriesController {
 
   @Public()
   @Get()
-  @ApiOkResponse({ description: 'Categorias listadas com sucesso', type: CategoriesListOkResponseDto })
+  @ApiOperation({
+    summary: 'Lista todas as categorias',
+    description: 'Retorna uma lista de todas as categorias cadastradas.',
+  })
+  @ApiOkResponse({
+    description: 'Categorias listadas com sucesso',
+    type: CategoriesListOkResponseDto,
+  })
   @HandleErrors()
   findAll() {
     return this.categoriesService
@@ -55,7 +80,20 @@ export class CategoriesController {
 
   @Public()
   @Get(':id')
-  @ApiOkResponse({ description: 'Categoria encontrada com sucesso', type: CategoryGetOkResponseDto })
+  @ApiOperation({
+    summary: 'Busca uma categoria pelo ID',
+    description: 'Retorna os detalhes de uma categoria específica baseada no ID fornecido.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria',
+    type: 'integer',
+    example: 1,
+  })
+  @ApiOkResponse({
+    description: 'Categoria encontrada com sucesso',
+    type: CategoryGetOkResponseDto,
+  })
   @HandleErrors()
   findOne(@Param('id') id: string) {
     return this.categoriesService
@@ -69,7 +107,24 @@ export class CategoriesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  @ApiOkResponse({ description: 'Categoria atualizada com sucesso', type: CategoryUpdateOkResponseDto })
+  @ApiOperation({
+    summary: 'Atualiza uma categoria',
+    description: 'Atualiza os dados de uma categoria existente baseada no ID fornecido.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria a ser atualizada',
+    type: 'integer',
+    example: 1,
+  })
+  @ApiBody({
+    type: UpdateCategoryDto,
+    description: 'Dados da categoria para atualização',
+  })
+  @ApiOkResponse({
+    description: 'Categoria atualizada com sucesso',
+    type: CategoryUpdateOkResponseDto,
+  })
   @HandleErrors()
   update(
     @Param('id') id: string,
@@ -86,7 +141,20 @@ export class CategoriesController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiOkResponse({ description: 'Categoria removida com sucesso', type: CategoryRemoveOkResponseDto })
+  @ApiOperation({
+    summary: 'Remove uma categoria',
+    description: 'Remove uma categoria existente baseada no ID fornecido.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID da categoria a ser removida',
+    type: 'integer',
+    example: 1,
+  })
+  @ApiOkResponse({
+    description: 'Categoria removida com sucesso',
+    type: CategoryRemoveOkResponseDto,
+  })
   @HandleErrors()
   remove(@Param('id') id: string) {
     return this.categoriesService

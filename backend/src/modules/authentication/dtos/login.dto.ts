@@ -6,7 +6,7 @@ export class LoginDto {
   @IsString()
   @ApiProperty({
     description: 'Login do usuário (username ou e-mail, conforme política de autenticação)',
-    example: 'joao.silva',
+    example: 'caio.dev',
   })
   login: string;
 
@@ -14,7 +14,7 @@ export class LoginDto {
   @IsString()
   @ApiProperty({
     description: 'Senha do usuário em texto simples (será validada e nunca armazenada).',
-    example: 'MinhaSenhaForte123!',
+    example: 'admin',
   })
   senha: string;
 }

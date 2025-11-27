@@ -58,9 +58,7 @@
           <v-divider class="my-4" />
 
           <v-card-text class="text-center text-grey">
-            <p class="text-caption">
-              Use login: admin / senha: admin para testar
-            </p>
+            <p class="text-caption">Use login: admin / senha: admin para testar</p>
           </v-card-text>
         </v-card>
       </v-col>
@@ -73,6 +71,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
 import type { LoginCredentials } from '@/types/auth.types'
+import './styles.css'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -94,9 +93,3 @@ const handleLogin = async () => {
 }
 </script>
 
-<style scoped>
-.fill-height {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
-}
-</style>

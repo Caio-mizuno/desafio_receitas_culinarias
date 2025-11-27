@@ -11,8 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from '../dtos/create-user';
-import { UpdateUserDto } from '../dtos/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/create-user';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
 import { Public } from 'src/common/decorators/is-public.decorator';
 import { DefaultResponseDto } from 'src/common/dtos/default-response.dto';

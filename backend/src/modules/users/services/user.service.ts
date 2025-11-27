@@ -4,8 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '../entities/user.entity';
-import { CreateUserDto } from '../dtos/create-user';
-import { UpdateUserDto } from '../dtos/update-user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/create-user';
 import * as bcrypt from 'bcrypt';
 import { SALTS_OR_ROUNDS } from 'src/common/constants/salts-or-rounds.constants';
 import { UsersRepository } from '../repositories/users.repository';

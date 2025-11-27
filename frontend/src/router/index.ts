@@ -7,51 +7,51 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/public/home/index.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import('@/views/public/login/index.vue'),
       meta: { requiresGuest: true }
     },
     {
       path: '/receitas',
       name: 'recipes',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/public/home/index.vue')
     },
     {
       path: '/receitas/:id',
       name: 'recipe-detail',
-      component: () => import('@/views/RecipeDetailView.vue')
+      component: () => import('@/views/public/recipe-detail/index.vue')
     },
     {
       path: '/categorias',
       name: 'categories',
-      component: () => import('@/views/CategoriesView.vue')
+      component: () => import('@/views/public/categories/index.vue')
     },
     {
       path: '/minhas-receitas',
       name: 'my-recipes',
-      component: () => import('@/views/MyRecipesView.vue'),
+      component: () => import('@/views/private/my-recipes/index.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/minhas-receitas/nova',
       name: 'create-recipe',
-      component: () => import('@/views/RecipeFormView.vue'),
+      component: () => import('@/views/private/recipe-form/index.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/minhas-receitas/:id/editar',
       name: 'edit-recipe',
-      component: () => import('@/views/RecipeFormView.vue'),
+      component: () => import('@/views/private/recipe-form/index.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/perfil',
       name: 'profile',
-      component: () => import('@/views/ProfileView.vue'),
+      component: () => import('@/views/private/profile/index.vue'),
       meta: { requiresAuth: true }
     }
   ],

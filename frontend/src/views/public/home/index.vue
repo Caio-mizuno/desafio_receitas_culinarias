@@ -4,7 +4,6 @@
       <v-col cols="12">
         <h1 class="text-h3 font-weight-bold mb-6">Receitas Culinárias</h1>
 
-        <!-- Filtros -->
         <v-card class="mb-6" elevation="2">
           <v-card-text>
             <v-row>
@@ -47,14 +46,12 @@
           </v-card-text>
         </v-card>
 
-        <!-- Loading -->
         <v-row v-if="recipeStore.loading">
           <v-col cols="12" sm="6" md="4" lg="3" v-for="n in 8" :key="n">
             <v-skeleton-loader type="card" />
           </v-col>
         </v-row>
 
-        <!-- Lista de Receitas -->
         <v-row v-else-if="filteredRecipes.length > 0">
           <v-col cols="12" sm="6" md="4" lg="3" v-for="recipe in filteredRecipes" :key="recipe.id">
             <v-card
@@ -69,11 +66,7 @@
                 cover
                 class="align-end"
               >
-                <v-chip
-                  color="primary"
-                  class="ma-2"
-                  size="small"
-                >
+                <v-chip color="primary" class="ma-2" size="small">
                   {{ getCategoryName(recipe.categoriaId) }}
                 </v-chip>
               </v-img>
@@ -101,11 +94,7 @@
 
               <v-card-actions>
                 <v-spacer />
-                <v-btn
-                  color="primary"
-                  variant="text"
-                  @click.stop="goToRecipe(recipe.id)"
-                >
+                <v-btn color="primary" variant="text" @click.stop="goToRecipe(recipe.id)">
                   Ver Receita
                 </v-btn>
               </v-card-actions>
@@ -113,7 +102,6 @@
           </v-col>
         </v-row>
 
-        <!-- Empty State -->
         <v-row v-else>
           <v-col cols="12" class="text-center">
             <v-icon size="128" color="grey-lighten-2" class="mb-4">mdi-chef-hat</v-icon>
@@ -126,13 +114,16 @@
       </v-col>
     </v-row>
   </v-container>
+  
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRecipeStore } from '@/stores/recipe.store'
 import { useCategoryStore } from '@/stores/category.store'
+import { debounce } from './service'
+import './styles.css'
 
 const router = useRouter()
 const recipeStore = useRecipeStore()
@@ -169,29 +160,11 @@ const getCategoryName = (categoriaId: number) => {
   return category?.nome || 'Sem Categoria'
 }
 
-function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
-  let timeout: NodeJS.Timeout
-  return ((...args: Parameters<T>) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => func.apply(this, args), wait)
-  }) as T
-}
-
 onMounted(async () => {
   await Promise.all([
     recipeStore.fetchRecipes(),
-    categoryStore.fetchCategories()
+    categoryStore.fetchCategories(),
   ])
 })
 </script>
 
-<style scoped>
-.recipe-card {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-}
-
-.recipe-card:hover {
-  transform: translateY(-4px);
-}
-</style>

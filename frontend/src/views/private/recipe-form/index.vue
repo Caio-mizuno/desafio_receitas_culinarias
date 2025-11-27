@@ -2,28 +2,17 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-btn
-          color="secondary"
-          variant="text"
-          prepend-icon="mdi-arrow-left"
-          @click="goBack"
-          class="mb-4"
-        >
-          Voltar
-        </v-btn>
+        <v-btn color="secondary" variant="text" prepend-icon="mdi-arrow-left" @click="goBack" class="mb-4">Voltar</v-btn>
       </v-col>
     </v-row>
 
     <v-row>
       <v-col cols="12" md="8">
         <v-card elevation="4">
-          <v-card-title class="text-h5">
-            {{ isEdit ? 'Editar Receita' : 'Nova Receita' }}
-          </v-card-title>
+          <v-card-title class="text-h5">{{ isEdit ? 'Editar Receita' : 'Nova Receita' }}</v-card-title>
 
           <v-card-text>
             <v-form @submit.prevent="handleSubmit" ref="formRef">
-              <!-- Nome da Receita -->
               <v-text-field
                 v-model="recipeForm.nome"
                 label="Nome da Receita"
@@ -34,7 +23,6 @@
                 class="mb-4"
               />
 
-              <!-- Categoria -->
               <v-select
                 v-model="recipeForm.categoriaId"
                 label="Categoria"
@@ -48,7 +36,6 @@
                 class="mb-4"
               />
 
-              <!-- Tempo e Porções -->
               <v-row class="mb-4">
                 <v-col cols="6">
                   <v-text-field
@@ -74,7 +61,6 @@
                 </v-col>
               </v-row>
 
-              <!-- Ingredientes -->
               <v-textarea
                 v-model="recipeForm.ingredientes"
                 label="Ingredientes"
@@ -87,7 +73,6 @@
                 hint="Liste todos os ingredientes necessários"
               />
 
-              <!-- Modo de Preparo -->
               <v-textarea
                 v-model="recipeForm.modoPreparo"
                 label="Modo de Preparo"
@@ -100,35 +85,14 @@
                 hint="Descreva detalhadamente o passo a passo"
               />
 
-              <!-- Error Alert -->
-              <v-alert
-                v-if="recipeStore.error"
-                type="error"
-                variant="tonal"
-                closable
-                @click:close="recipeStore.clearError"
-                class="mb-4"
-              >
+              <v-alert v-if="recipeStore.error" type="error" variant="tonal" closable @click:close="recipeStore.clearError" class="mb-4">
                 {{ recipeStore.error }}
               </v-alert>
 
-              <!-- Actions -->
               <v-row>
                 <v-col cols="12" class="d-flex justify-end">
-                  <v-btn
-                    color="grey"
-                    variant="text"
-                    @click="goBack"
-                    class="mr-2"
-                  >
-                    Cancelar
-                  </v-btn>
-                  <v-btn
-                    type="submit"
-                    color="primary"
-                    :loading="recipeStore.loading"
-                    :disabled="recipeStore.loading"
-                  >
+                  <v-btn color="grey" variant="text" @click="goBack" class="mr-2">Cancelar</v-btn>
+                  <v-btn type="submit" color="primary" :loading="recipeStore.loading" :disabled="recipeStore.loading">
                     {{ isEdit ? 'Atualizar' : 'Criar' }} Receita
                   </v-btn>
                 </v-col>
@@ -138,7 +102,6 @@
         </v-card>
       </v-col>
 
-      <!-- Preview -->
       <v-col cols="12" md="4">
         <v-card elevation="2" class="preview-card">
           <v-card-title>
@@ -147,18 +110,12 @@
           </v-card-title>
 
           <v-card-text>
-            <div v-if="recipeForm.nome" class="text-h6 mb-2">
-              {{ recipeForm.nome }}
-            </div>
-            <div v-else class="text-h6 text-grey mb-2">
-              Nome da Receita
-            </div>
+            <div v-if="recipeForm.nome" class="text-h6 mb-2">{{ recipeForm.nome }}</div>
+            <div v-else class="text-h6 text-grey mb-2">Nome da Receita</div>
 
             <v-row v-if="recipeForm.categoriaId" class="mb-4">
               <v-col cols="12">
-                <v-chip color="primary" size="small">
-                  {{ getCategoryName(recipeForm.categoriaId) }}
-                </v-chip>
+                <v-chip color="primary" size="small">{{ getCategoryName(recipeForm.categoriaId) }}</v-chip>
               </v-col>
             </v-row>
 
@@ -196,7 +153,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useRecipeStore } from '@/stores/recipe.store'
 import { useCategoryStore } from '@/stores/category.store'
-import type { Recipe } from '@/types/recipe.types'
+import './styles.css'
 
 const router = useRouter()
 const route = useRoute()
@@ -222,10 +179,8 @@ const getCategoryName = (categoryId: number | null) => {
 
 const loadRecipe = async () => {
   if (!isEdit.value) return
-
   const recipeId = Number(route.params.id)
   const result = await recipeStore.fetchRecipeById(recipeId)
-
   if (result.success && recipeStore.currentRecipe) {
     const recipe = recipeStore.currentRecipe
     Object.assign(recipeForm, {
@@ -276,9 +231,3 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-.preview-card {
-  position: sticky;
-  top: 20px;
-}
-</style>
