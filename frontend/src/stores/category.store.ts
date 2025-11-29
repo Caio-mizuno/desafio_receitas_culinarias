@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Category } from '@/types/recipe.types'
+import type { Category, CategoryWithCountDto } from '@/types/recipe.types'
 import type { DefaultResponse } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
 import { MockService } from '@/services/mock.service'
 
 export const useCategoryStore = defineStore('category', () => {
   const categories = ref<Category[]>([])
+  const categoriesCountRecipes = ref<CategoryWithCountDto[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
 
@@ -24,6 +25,28 @@ export const useCategoryStore = defineStore('category', () => {
     try {
       const response = await apiClient.get<DefaultResponse<Category[]>>('/categories')
       categories.value = response.data.response
+      return { success: true }
+    } catch (err: any) {
+      // Fallback to mock data when backend is not available
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+        const response = await MockService.getCategories()
+        categories.value = response.response
+        return { success: true }
+      }
+      error.value = err.response?.data?.message || 'Erro ao buscar categorias'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+   const fetchCategoriesCount = async () => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.get<DefaultResponse<CategoryWithCountDto[]>>('/categories/count/recipes')
+      categoriesCountRecipes.value = response.data.response
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
@@ -96,10 +119,12 @@ export const useCategoryStore = defineStore('category', () => {
 
   return {
     categories,
+    categoriesCountRecipes,
     loading,
     error,
     categoryOptions,
     fetchCategories,
+    fetchCategoriesCount,
     createCategory,
     updateCategory,
     deleteCategory,

@@ -1,114 +1,208 @@
-## Objetivo
+# Backend - Sistema de Receitas Culinárias
 
-O desafio consiste em implementar o máximo de funcionalidades descritas abaixo e enviar o projeto dentro do prazo estabelecido pela empresa.
+API REST desenvolvida com NestJS para gerenciamento de receitas culinárias, categorias e usuários.
 
-## Funcionalidades
+## Tecnologias
 
-* Cadastro de usuário no sistema.
-* Login de usuário.
-* Logoff de usuário.
-* Cadastro de receitas pelo usuário.
-* Pesquisa de receitas cadastradas pelo usuário.
-* Edição de uma receita.
-* Exclusão de uma receita.
-* Impressão de uma receita.
+- **NestJS** - Framework Node.js progressivo
+- **TypeScript** - Superset tipado do JavaScript
+- **TypeORM** - ORM para TypeScript e JavaScript
+- **MySQL** - Banco de dados relacional
+- **JWT** - Autenticação baseada em tokens
+- **Swagger** - Documentação automática da API
+- **Jest** - Framework de testes
+- **Docker** - Containerização da aplicação
 
-## Banco de Dados
+## Pré-requisitos
 
-Nos arquivos enviados, há uma pasta chamada **banco**, que contém detalhes sobre a modelagem do banco de dados e scripts SQL para sua criação.
+- Docker e Docker Compose
+- Node.js >= 20.x (apenas se rodar localmente)
+- MySQL 8.x (apenas se rodar localmente)
 
-## Restrições
+## Configuração
 
-### Desenvolvedor Web - Full Stack / Tech Lead
+### 1. Configurar Variáveis de Ambiente
 
-* Utilize **Node.js** com **TypeScript** para construir uma **API RESTful** no backend.
-* No frontend, utilize **Vue.js** para criar a interface que se comunicará com o backend.
-* O banco de dados deve ser **MySQL**.
-* Inclua um **guia detalhado** explicando como rodar o sistema.
-* **Diferenciais:** Documentação de API (**Swagger**), uso de **Docker** e implementação de **testes unitários e de integração (E2E)**.  
-
-### Tecnologias
-
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
-![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
-![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
-
-### Descrição
-
-RESTful API que permite o acesso de rotas privadas e públicas para aplicativo app-backend-nest.
-
-### Passos para rodar o projeto:
-
-#### Instale as dependencias
-
-abra o terminal e rode os comandos:
+Copie o arquivo de exemplo e configure as variáveis:
 
 ```bash
+cp .env.example .env
+```
+
+Para rodar com Docker, use estas configurações no `.env`:
+
+```env
+# Database Configuration
+DB_HOST=backend-backend-nest-mysql-1
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=123123
+DB_DATABASE=teste_receitas_rg_sistemas
+
+# Application
+NODE_ENV=development
+APP_PORT=3000
+
+# JWT
+JWT_SECRET=secretKey
+JWT_EXPIRES_IN=1800s
+
+# CORS
+CORS_ORIGINS=http://localhost:5173
+CORS_CREDENTIALS=true
+```
+
+## Executando o Projeto
+
+### Com Docker (Recomendado)
+
+O Docker Compose irá subir o backend, nginx e MySQL automaticamente:
+
+```bash
+# Iniciar todos os serviços
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar os serviços
+docker-compose down
+
+# Remover volumes (limpa banco de dados)
+docker-compose down -v
+```
+
+**A API estará disponível em:** `http://localhost:9561`
+
+### Localmente (Alternativo)
+
+Certifique-se de ter o MySQL rodando e configure o `.env` com `DB_HOST=localhost`.
+
+```bash
+# Instalar dependências
 npm install
+
+# Modo desenvolvimento (com hot reload)
+npm run start:dev
+
+# Modo produção
+npm run build
+npm run start:prod
 ```
 
-#### Criando variaveis de ambiete
+**A API estará disponível em:** `http://localhost:3000`
 
-Crie um arquivo .env na raiz do projeto seguindo o template abaixo:
+## Documentação da API
 
-#### Email Configuration
+Acesse a documentação Swagger em:
 
-- EMAIL_HOST=smtp.gmail.com
-- EMAIL_USER=
-- EMAIL_PASS=
+```
+http://localhost:9561/api/docs
+```
 
-#### Database Configuration
-
-- DB_HOST=host.docker.internal
-- DB_PORT=10000
-- DB_USERNAME=root
-- DB_PASSWORD=123123
-- DB_DATABASE=local_db
-
-#### Node Environment
-
-- NODE_ENV=development
-- APP_PORT=3000
-
-#### JWT Secret
-
-- JWT_SECRET=secretKey
-- JWT_EXPIRES_IN=1800s
-
-#### Comando para rodar testes
+## Build
 
 ```bash
-npx jest
+# Build do projeto
+npm run build
+
+# Build é gerado em dist/
 ```
 
-#### Comandos para rodar o projeto
-
-abra o terminal e rode esses comandos:
-
-- subir container com banco de dados
+## Testes
 
 ```bash
-docker compose up
+# Executar todos os testes unitários
+npm test
+
+# Executar testes em modo watch
+npm run test:watch
+
+# Gerar relatório de cobertura
+npm run test:cov
+
+# Executar testes e2e
+npm run test:e2e
 ```
 
-- rodar aplicação nestjs
+### Cobertura de Testes
+
+O projeto possui requisitos mínimos de cobertura:
+- **Branches**: 50%
+- **Functions**: 58%
+- **Lines**: 71%
+- **Statements**: 71%
+
+## Seed de Dados
+
+Para popular o banco de dados com receitas de exemplo:
 
 ```bash
-npm run start
+# Via script NPM
+npm run seed:recipes
+
+# Via CLI
+npm run cli -- seed recipes
 ```
 
-#### Usuario padrão
-
-- email: admin@email.com
-- senha: admin
-
-#### Documentação
-
-Para vizualizar documentaçao das rotas acesse:
+## Estrutura do Projeto
 
 ```
-http://localhost:3000/api#/
+backend/
+├── src/
+│   ├── modules/           # Módulos da aplicação
+│   │   ├── auth/         # Autenticação e autorização
+│   │   ├── users/        # Gestão de usuários
+│   │   ├── recipes/      # Gestão de receitas
+│   │   └── categories/   # Gestão de categorias
+│   ├── common/           # Código compartilhado
+│   ├── config/           # Configurações
+│   ├── cli/              # Comandos CLI
+│   ├── seeds/            # Seeds do banco de dados
+│   └── main.ts           # Entrada da aplicação
+├── test/                 # Testes e2e
+├── docker/               # Configurações Docker
+└── docker-compose.yml    # Configuração Docker Compose
+```
+
+## Endpoints Principais
+
+### Autenticação
+- `POST /auth/register` - Registrar novo usuário
+- `POST /auth/login` - Login de usuário
+- `GET /auth/profile` - Obter perfil do usuário autenticado
+
+### Receitas
+- `GET /recipes` - Listar receitas (com filtros e paginação)
+- `GET /recipes/:id` - Obter receita por ID
+- `POST /recipes` - Criar nova receita (autenticado)
+- `PUT /recipes/:id` - Atualizar receita (autenticado)
+- `DELETE /recipes/:id` - Deletar receita (autenticado)
+
+### Categorias
+- `GET /categories` - Listar categorias
+- `GET /categories/:id` - Obter categoria por ID
+- `POST /categories` - Criar categoria (autenticado)
+- `PUT /categories/:id` - Atualizar categoria (autenticado)
+- `DELETE /categories/:id` - Deletar categoria (autenticado)
+
+## Troubleshooting
+
+### Erro de conexão com o banco de dados
+
+Certifique-se de que o `DB_HOST` no `.env` está correto:
+- **Com Docker**: `DB_HOST=backend-backend-nest-mysql-1`
+- **Localmente**: `DB_HOST=localhost`
+
+### Porta já em uso
+
+Se a porta estiver em uso:
+- **Docker**: modifique a porta em `docker-compose.yml`
+- **Local**: modifique `APP_PORT` no `.env`
+
+### Resetar banco de dados
+
+```bash
+docker-compose down -v
+docker-compose up -d
 ```

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../entities/category.entity';
-import { CreateCategoryDto } from '../dto/category.dto';
+import { CategoryWithCountDto, CreateCategoryDto } from '../dto/category.dto';
 
 @Injectable()
 export class CategoriesRepository {
@@ -33,5 +33,18 @@ export class CategoriesRepository {
 
   async remove(category: Category): Promise<Category> {
     return this.typeOrmRepository.remove(category);
+  }
+
+  async countByRecipes(): Promise<CategoryWithCountDto[]> {
+    return this.typeOrmRepository
+      .createQueryBuilder('category')
+      .select('category.id', 'id')
+      .addSelect('category.nome', 'nome')
+      .addSelect('COUNT(recipe.id)', 'receitasContagem') 
+      .leftJoin('category.receitas', 'recipe')
+      .groupBy('category.id')
+      .addGroupBy('category.nome')
+      .orderBy('nome')
+      .getRawMany();
   }
 }

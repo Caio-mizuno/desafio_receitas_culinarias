@@ -20,6 +20,10 @@ export interface Category {
   updatedAt?: string
 }
 
+export interface CategoryWithCountDto extends Category {
+  receitasContagem: number
+}
+
 export interface RecipeFilters {
   categoriaId?: number
   nome?: string

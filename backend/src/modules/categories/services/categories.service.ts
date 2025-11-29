@@ -4,7 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import { CategoryWithCountDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
 import { CategoriesRepository } from '../repositories/categories.repository';
 
 @Injectable()
@@ -48,5 +48,9 @@ export class CategoriesService {
   async remove(id: number): Promise<void> {
     const category = await this.findOne(id);
     await this.categoryRepository.remove(category);
+  }
+
+  async countByRecipes(): Promise<CategoryWithCountDto[]> {
+    return this.categoryRepository.countByRecipes();
   }
 }

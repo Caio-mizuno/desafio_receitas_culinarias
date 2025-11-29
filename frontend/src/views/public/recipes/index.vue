@@ -95,8 +95,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { useCategoryStore } from "@/stores/category.store";
 import RecipeCard from "@/components/cards/RecipeCard.vue";
 import {
@@ -109,6 +109,7 @@ import {
 import "./styles.css";
 
 const router = useRouter();
+const route = useRoute();
 const categoryStore = useCategoryStore();
 
 const searchTerm = ref("");
@@ -144,6 +145,9 @@ const getCategoryName = (categoriaId: number) => {
 };
 
 onMounted(async () => {
+  const q = route.query.categoriaId as undefined | string | string[];
+  const initial = Array.isArray(q) ? Number(q[0]) : Number(q);
+  selectedCategory.value = Number.isFinite(initial) ? initial : null;
   await categoryStore.fetchCategories();
   await loadPage();
 });
@@ -176,4 +180,14 @@ async function loadMore() {
   pagination.value.page += 1;
   await loadPage();
 }
+
+watch(
+  () => route.query.categoriaId,
+  async (newVal) => {
+    const id = Array.isArray(newVal) ? Number(newVal[0]) : Number(newVal as any);
+    selectedCategory.value = Number.isFinite(id) ? id : null;
+    pagination.value.page = 1;
+    await loadPage();
+  }
+);
 </script>

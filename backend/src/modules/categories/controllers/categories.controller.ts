@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from '../services/categories.service';
-import { CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import { CategoryWithCountDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
 import { Public } from 'src/common/decorators/is-public.decorator';
 import { DefaultResponseDto } from 'src/common/dtos/default-response.dto';
@@ -82,7 +82,8 @@ export class CategoriesController {
   @Get(':id')
   @ApiOperation({
     summary: 'Busca uma categoria pelo ID',
-    description: 'Retorna os detalhes de uma categoria específica baseada no ID fornecido.',
+    description:
+      'Retorna os detalhes de uma categoria específica baseada no ID fornecido.',
   })
   @ApiParam({
     name: 'id',
@@ -109,7 +110,8 @@ export class CategoriesController {
   @Put(':id')
   @ApiOperation({
     summary: 'Atualiza uma categoria',
-    description: 'Atualiza os dados de uma categoria existente baseada no ID fornecido.',
+    description:
+      'Atualiza os dados de uma categoria existente baseada no ID fornecido.',
   })
   @ApiParam({
     name: 'id',
@@ -163,5 +165,24 @@ export class CategoriesController {
         () =>
           new DefaultResponseDto(null, 'Categoria removida com sucesso', true),
       );
+  }
+
+  @Public()
+  @Get('count/recipes')
+  @ApiOperation({
+    summary: 'Retorna categorias com a contagem de receitas',
+  })
+  @ApiOkResponse({
+    description: 'Lista de categorias com contagem de receitas',
+    type: [CategoryWithCountDto],
+  })
+  @HandleErrors()
+  async countByRecipes() {
+    const result = await this.categoriesService.countByRecipes();
+    return new DefaultResponseDto(
+      result,
+      'Contagem de categorias por receitas retornada com sucesso',
+      true,
+    );
   }
 }

@@ -34,9 +34,10 @@ describe('UserController (e2e)', () => {
       .send(mockUser)
       .expect(201);
 
-    expect(response.body).toHaveProperty('id');
-    expect(response.body.login).toEqual(mockUser.login);
-    userId = response.body.id;
+    expect(response.body.status).toBe(true);
+    expect(response.body.response).toHaveProperty('id');
+    expect(response.body.response.login).toEqual(mockUser.login);
+    userId = response.body.response.id;
   });
 
   it('/auth/login (POST) - Login to get Token', async () => {
@@ -48,8 +49,9 @@ describe('UserController (e2e)', () => {
       })
       .expect(200);
 
-    expect(response.body).toHaveProperty('access_token');
-    accessToken = response.body.access_token;
+    expect(response.body.status).toBe(true);
+    expect(response.body.response).toHaveProperty('access_token');
+    accessToken = response.body.response.access_token;
   });
 
   it('/users/:id (GET) - Get User', async () => {
@@ -58,8 +60,9 @@ describe('UserController (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
 
-    expect(response.body.id).toEqual(userId);
-    expect(response.body.login).toEqual(mockUser.login);
+    expect(response.body.status).toBe(true);
+    expect(response.body.response.id).toEqual(userId);
+    expect(response.body.response.login).toEqual(mockUser.login);
   });
 
   it('/users/:id (PATCH) - Update User', async () => {
@@ -70,7 +73,8 @@ describe('UserController (e2e)', () => {
       .send({ nome: newName })
       .expect(200);
 
-    expect(response.body.nome).toEqual(newName);
+    expect(response.body.status).toBe(true);
+    expect(response.body.response.nome).toEqual(newName);
   });
 
   it('/users/:id (DELETE) - Delete User', async () => {

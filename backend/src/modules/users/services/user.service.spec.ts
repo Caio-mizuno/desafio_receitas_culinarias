@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { UsersRepository } from '../repositories/users.repository';
+import { RecipesRepository } from '../../recipes/repositories/recipes.repository';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto, UpdateUserDto } from '../dtos/create-user';
@@ -19,9 +20,18 @@ describe('UserService', () => {
     remove: jest.fn(),
   } as unknown as jest.Mocked<UsersRepository>;
 
+  const mockRecipesRepo = {
+    countByUser: jest.fn(),
+    countDistinctCategoriesByUser: jest.fn(),
+  } as unknown as jest.Mocked<RecipesRepository>;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService, { provide: UsersRepository, useValue: mockRepo }],
+      providers: [
+        UserService,
+        { provide: UsersRepository, useValue: mockRepo },
+        { provide: RecipesRepository, useValue: mockRecipesRepo },
+      ],
     }).compile();
 
     service = module.get<UserService>(UserService);
@@ -124,6 +134,39 @@ describe('UserService', () => {
 
       await service.remove(1);
       expect(mockRepo.remove).toHaveBeenCalledWith(entity);
+    });
+  });
+
+  describe('getProfileWithStats', () => {
+    it('deve retornar perfil do usuário com estatísticas de receitas e categorias', async () => {
+      const user: User = { id: 1, nome: 'Test', login: 'test' } as any;
+      const receitasCriadas = 5;
+      const categoriasUtilizadas = 3;
+
+      (mockRecipesRepo.countByUser as any).mockResolvedValue(receitasCriadas);
+      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(categoriasUtilizadas);
+
+      const result = await service.getProfileWithStats(user);
+
+      expect(result).toEqual({
+        ...user,
+        receitasCriadas,
+        categoriasUtilizadas,
+      });
+      expect(mockRecipesRepo.countByUser).toHaveBeenCalledWith(user.id);
+      expect(mockRecipesRepo.countDistinctCategoriesByUser).toHaveBeenCalledWith(user.id);
+    });
+
+    it('deve retornar zeros quando usuário não tem receitas', async () => {
+      const user: User = { id: 2, nome: 'New User', login: 'newuser' } as any;
+
+      (mockRecipesRepo.countByUser as any).mockResolvedValue(0);
+      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(0);
+
+      const result = await service.getProfileWithStats(user);
+
+      expect(result.receitasCriadas).toBe(0);
+      expect(result.categoriasUtilizadas).toBe(0);
     });
   });
 });

@@ -17,7 +17,7 @@
                 <v-icon size="48" color="primary" class="mb-4">mdi-tag-outline</v-icon>
                 <v-card-title class="text-h6 mb-2">{{ category.nome }}</v-card-title>
                 <div v-if="category.descricao" class="text-body-2 text-grey mb-4">{{ category.descricao }}</div>
-                <v-chip color="secondary" size="small">{{ getRecipeCountByCategory(category.id) }} receitas</v-chip>
+                <v-chip color="secondary" size="small">{{ category.receitasContagem }} receitas</v-chip>
               </v-card-text>
             </v-card>
           </v-col>
@@ -39,28 +39,18 @@
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCategoryStore } from '@/stores/category.store'
-import { useRecipeStore } from '@/stores/recipe.store'
 import './styles.css'
 
 const router = useRouter()
 const categoryStore = useCategoryStore()
-const recipeStore = useRecipeStore()
 
-const categories = computed(() => categoryStore.categories)
-
-const getRecipeCountByCategory = (categoryId: number) => {
-  return recipeStore.recipes.filter(recipe => recipe.categoriaId === categoryId).length
-}
+const categories = computed(() => categoryStore.categoriesCountRecipes)
 
 const filterByCategory = (categoryId: number) => {
-  recipeStore.setFilters({ categoriaId: categoryId })
-  router.push('/')
+  router.push({ name: 'recipes', query: { categoriaId: String(categoryId) } })
 }
 
 onMounted(async () => {
-  await Promise.all([
-    categoryStore.fetchCategories(),
-    recipeStore.fetchRecipes()
-  ])
+  await categoryStore.fetchCategoriesCount()
 })
 </script>

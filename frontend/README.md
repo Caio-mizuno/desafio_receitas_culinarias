@@ -1,70 +1,192 @@
-# .
+# Frontend - Sistema de Receitas Culinárias
 
-This template should help get you started developing with Vue 3 in Vite.
+Interface web moderna desenvolvida com Vue 3 e Vuetify para navegação e gerenciamento de receitas culinárias.
 
-## Recommended IDE Setup
+## Tecnologias
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Vue 3** - Framework JavaScript progressivo
+- **TypeScript** - Superset tipado do JavaScript
+- **Vuetify 3** - Framework de componentes Material Design
+- **Pinia** - Gerenciamento de estado oficial do Vue
+- **Vue Router** - Roteamento oficial do Vue
+- **Vite** - Build tool e dev server ultrarrápido
+- **Axios** - Cliente HTTP
+- **Vitest** - Framework de testes unitários
+- **Cypress** - Framework de testes E2E
 
-## Recommended Browser Setup
+## Pré-requisitos
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Docker e Docker Compose (recomendado)
+- Node.js >= 20.19.0 ou >= 22.12.0 (apenas se rodar localmente)
 
-## Type Support for `.vue` Imports in TS
+## Configuração
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Configurar Variáveis de Ambiente
 
-## Customize configuration
+Copie o arquivo de exemplo e configure a URL da API:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```bash
+cp .env.example .env
 ```
 
-### Compile and Hot-Reload for Development
+Edite o arquivo `.env`:
 
-```sh
+```env
+VITE_API_BASE_URL=http://localhost:9561
+```
+
+## Executando o Projeto
+
+### Com Docker (Recomendado)
+
+```bash
+# Iniciar o serviço frontend
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar o serviço
+docker-compose down
+```
+
+**A aplicação estará disponível em:** `http://localhost:5173`
+
+### Localmente (Alternativo)
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+**A aplicação estará disponível em:** `http://localhost:5173`
 
-```sh
+## Build
+
+```bash
+# Build para produção
 npm run build
+
+# Preview da build de produção
+npm run preview
+
+# Type checking
+npm run type-check
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+O build é gerado em `dist/` e pode ser servido por qualquer servidor web estático.
 
-```sh
+## Testes
+
+### Testes Unitários
+
+```bash
+# Executar testes unitários
 npm run test:unit
+
+# Executar em modo watch
+npm run test:unit -- --watch
+
+# Gerar relatório de cobertura
+npm run test:unit -- --coverage
 ```
 
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+### Testes E2E (End-to-End)
 
-```sh
+```bash
+# Executar testes E2E em modo headless (CI)
+npm run test:e2e
+
+# Abrir Cypress em modo interativo
 npm run test:e2e:dev
 ```
 
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
+**Nota**: Os testes E2E requerem que a aplicação esteja rodando.
 
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
+## Estrutura do Projeto
 
-```sh
-npm run build
-npm run test:e2e
+```
+frontend/
+├── src/
+│   ├── assets/           # Recursos estáticos (imagens, estilos)
+│   ├── components/       # Componentes Vue reutilizáveis
+│   ├── router/           # Configuração de rotas
+│   ├── stores/           # Stores Pinia (estado global)
+│   ├── types/            # Definições TypeScript
+│   ├── views/            # Páginas/Views da aplicação
+│   │   ├── public/      # Views públicas (sem autenticação)
+│   │   └── private/     # Views privadas (requerem autenticação)
+│   ├── plugins/          # Plugins Vue (Vuetify, etc)
+│   └── main.ts           # Entrada da aplicação
+├── cypress/              # Testes E2E
+└── public/               # Arquivos públicos estáticos
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## Funcionalidades
 
-```sh
+### Páginas Públicas
+- **Home** - Listagem de receitas com busca e filtros
+- **Detalhes da Receita** - Visualização completa da receita
+- **Categorias** - Navegação por categorias
+- **Login/Registro** - Autenticação de usuários
+
+### Páginas Privadas (Autenticadas)
+- **Perfil** - Visualização e edição do perfil do usuário
+- **Minhas Receitas** - Gerenciamento das receitas do usuário
+- **Nova Receita** - Criação de novas receitas
+- **Editar Receita** - Edição de receitas existentes
+
+## Gerenciamento de Estado
+
+O projeto utiliza Pinia com as seguintes stores:
+- **authStore** - Autenticação e dados do usuário
+- **recipeStore** - Receitas e operações relacionadas
+- **categoryStore** - Categorias de receitas
+
+## Troubleshooting
+
+### Erro ao conectar com a API
+
+Verifique se:
+1. O backend está rodando em `http://localhost:9561`
+2. A variável `VITE_API_BASE_URL` está correta no `.env`
+3. CORS está configurado no backend
+
+### Erro com Cypress
+
+Reinstalar o Cypress:
+
+```bash
+npm run prepare
+# ou
+npx cypress install
+```
+
+### Problemas com tipos TypeScript
+
+```bash
+npm run type-check
+```
+
+### Porta já em uso
+
+O Vite automaticamente usará a próxima porta disponível (5174, 5175, etc).
+
+Para forçar uma porta específica:
+
+```bash
+npm run dev -- --port 3000
+```
+
+## Qualidade de Código
+
+```bash
+# Executar linters
 npm run lint
+
+# Formatar código
+npm run format
 ```
