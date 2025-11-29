@@ -1,6 +1,6 @@
 import type { Router } from 'vue-router'
 import { useRecipeStore } from '@/stores/recipe.store'
-import type { Category } from '@/types/recipe.types'
+import type { Category } from '@/types/category.types'
 
 export const getCategoryNameFromList = (categories: Category[], categoriaId: number) => {
   const cat = categories.find(c => c.id === categoriaId)

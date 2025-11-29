@@ -1,4 +1,5 @@
-import type { Recipe, Category } from '@/types/recipe.types'
+import type { Recipe } from '@/types/recipe.types'
+import type { Category } from '@/types/category.types'
 import type { DefaultResponse, DefaultPaginationResponse } from '@/types/auth.types'
 
 // Dados mockados para demonstração

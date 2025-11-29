@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Category, CategoryWithCountDto } from '@/types/recipe.types'
+import type { Category, CategoryWithCountDto } from '@/types/category.types'
 import type { DefaultResponse } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
 import { MockService } from '@/services/mock.service'
