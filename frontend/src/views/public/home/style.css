@@ -23,29 +23,6 @@
   overflow: hidden;
 }
 
-.carousel-margin {
-  margin: 0 2rem;
-}
-
-.carousel-card {
-  width: 60%;
-  margin: 0 auto;
-}
-@media (max-width: 600px) {
-  .carousel-card {
-    width: 80%;
-    margin: 0 auto;
-  }
-}
-.carousel-container {
-  overflow: visible;
-}
-.carousel-container :deep(.v-window__container) {
-  overflow: visible;
-}
-.carousel-container :deep(.v-window__controls) {
-  z-index: 5;
-}
 .active-chip {
   background-color: rgba(33, 150, 243, 0.15);
 }

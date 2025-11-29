@@ -2,7 +2,7 @@
 
 FROM node:22-alpine AS development
 
-WORKDIR /app
+WORKDIR /project
 
 # Install dependencies first for better caching
 COPY package*.json ./
