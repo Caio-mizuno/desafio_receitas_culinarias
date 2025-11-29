@@ -43,21 +43,11 @@ import { JwtAuthGuard } from './modules/authentication/guards/auth.guard';
         password: config.dbPassword,
         database:
           config.nodeEnv === 'development' || config.nodeEnv === 'test'
-            ? config.dbDatabase
-            : config.dbDatabaseTest,
-
+            ? config.dbDatabaseTest
+            : config.dbDatabase,
         entities: [User, Category, Recipe],
-
-        synchronize:
-          config.nodeEnv === 'development' || config.nodeEnv === 'test'
-            ? true
-            : false,
-
-        logging:
-          config.nodeEnv === 'development' || config.nodeEnv === 'test'
-            ? true
-            : false,
-
+        synchronize:true,
+        logging:true,
         dropSchema: false,
         migrations: [`${__dirname}/migrations/{.ts,*.js}`],
         migrationsRun: false,
