@@ -85,9 +85,23 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "modules/**/*.(t|j)s"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/src/common/dtos/",
+      ".*/dto/swagger/.*",
+      ".*/dtos/swagger/.*"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+        "branches": 50,
+        "functions": 58,
+        "lines": 71,
+        "statements": 71
+      }
+    }
   }
 }

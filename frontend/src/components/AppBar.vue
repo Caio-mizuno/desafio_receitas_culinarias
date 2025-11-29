@@ -3,8 +3,10 @@
     <v-app-bar-nav-icon @click="drawer = !drawer" />
 
     <v-app-bar-title>
-      <v-icon class="mr-2">mdi-chef-hat</v-icon>
-      Receitas Culinárias
+      <div  class="d-inline-flex ">
+        <div><v-icon class="mr-2">mdi-chef-hat</v-icon></div>
+        <div class="font-weight-bold align-self-center">Receitas Culinárias</div>
+      </div>
     </v-app-bar-title>
 
     <template v-if="authStore.isAuthenticated">
@@ -36,21 +38,35 @@
               <v-icon size="24">mdi-account</v-icon>
             </v-avatar>
             <div class="text-subtitle-1 font-weight-medium">
-              {{ authStore.user?.login || 'Usuário' }}
+              {{ authStore.user?.login || "Usuário" }}
             </div>
           </v-card-text>
 
           <v-divider />
 
           <v-list density="compact">
-            <v-list-item prepend-icon="mdi-account-outline" title="Meu Perfil" @click="goToProfile" />
-            <v-list-item prepend-icon="mdi-book-outline" title="Minhas Receitas" @click="goToMyRecipes" />
+            <v-list-item
+              prepend-icon="mdi-account-outline"
+              title="Meu Perfil"
+              @click="goToProfile"
+            />
+            <v-list-item
+              prepend-icon="mdi-book-outline"
+              title="Minhas Receitas"
+              @click="goToMyRecipes"
+            />
           </v-list>
 
           <v-divider />
 
           <v-card-actions>
-            <v-btn color="error" variant="text" block @click="handleLogout" :loading="authStore.loading">
+            <v-btn
+              color="error"
+              variant="text"
+              block
+              @click="handleLogout"
+              :loading="authStore.loading"
+            >
               <v-icon start>mdi-logout</v-icon>
               Sair
             </v-btn>
@@ -60,7 +76,7 @@
     </template>
     <template v-else>
       <v-spacer />
-      <v-btn color="secondary" variant="elevated" @click="goToLogin">
+      <v-btn color="white" variant="text" @click="goToLogin">
         <v-icon start>mdi-login</v-icon>
         Entrar
       </v-btn>
@@ -68,17 +84,9 @@
   </v-app-bar>
 
   <!-- Navigation Drawer -->
-  <v-navigation-drawer
-    v-model="drawer"
-    temporary
-    location="start"
-  >
+  <v-navigation-drawer v-model="drawer" temporary location="start">
     <v-list>
-      <v-list-item
-        prepend-icon="mdi-home-outline"
-        title="Home"
-        @click="goToHome"
-      />
+      <v-list-item prepend-icon="mdi-home-outline" title="Home" @click="goToHome" />
       <v-list-item
         prepend-icon="mdi-book-outline"
         title="Receitas"
@@ -103,51 +111,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth.store'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth.store";
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
-const drawer = ref(false)
-const activeTab = ref('')
+const drawer = ref(false);
+const activeTab = ref("");
 
 const goToHome = () => {
-  drawer.value = false
-  router.push('/')
-}
+  drawer.value = false;
+  router.push("/");
+};
 
 const goToRecipes = () => {
-  drawer.value = false
-  router.push('/receitas')
-}
+  drawer.value = false;
+  router.push("/receitas");
+};
 
 const goToCategories = () => {
-  drawer.value = false
-  router.push('/categorias')
-}
+  drawer.value = false;
+  router.push("/categorias");
+};
 
 const goToMyRecipes = () => {
-  drawer.value = false
-  router.push('/minhas-receitas')
-}
+  drawer.value = false;
+  router.push("/minhas-receitas");
+};
 
 const goToProfile = () => {
-  router.push('/perfil')
-}
+  router.push("/perfil");
+};
 
 const goToLogin = () => {
-  router.push('/login')
-}
+  router.push("/login");
+};
 
 const handleLogout = async () => {
-  await authStore.logout()
-  router.push('/')
-}
+  await authStore.logout();
+  router.push("/");
+};
 
 const goToCreateRecipe = () => {
-  drawer.value = false
-  router.push('/minhas-receitas/nova')
-}
+  drawer.value = false;
+  router.push("/minhas-receitas/nova");
+};
 </script>

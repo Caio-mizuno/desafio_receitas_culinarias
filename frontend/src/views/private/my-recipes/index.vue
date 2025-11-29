@@ -10,7 +10,7 @@
         </div>
 
         <v-row class="mb-4">
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="5">
             <v-text-field
               v-model="searchTerm"
               label="Buscar por nome"
@@ -39,6 +39,7 @@
               >Filtrar</v-btn
             >
             <v-btn
+              v-if="selectedCategory || searchTerm"
               variant="text"
               color="grey"
               size="large"
