@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { Recipe, RecipeFilters, Category, PaginationInfo } from '@/types/recipe.types'
+import type { Recipe, RecipeFilters, PaginationInfo } from '@/types/recipe.types'
 import type { DefaultResponse, DefaultPaginationResponse } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
 import { MockService } from '@/services/mock.service'
