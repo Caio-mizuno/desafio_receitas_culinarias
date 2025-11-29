@@ -1,0 +1,55 @@
+.hero-banner {
+  position: relative;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+.hero-section {
+  background: linear-gradient(135deg, #fff 0%, #fff 40%, #f5f7fb 100%);
+}
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carousel-margin {
+  margin: 0 2rem;
+}
+
+.carousel-card {
+  width: 60%;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .carousel-card {
+    width: 80%;
+    margin: 0 auto;
+  }
+}
+.carousel-container {
+  overflow: visible;
+}
+.carousel-container :deep(.v-window__container) {
+  overflow: visible;
+}
+.carousel-container :deep(.v-window__controls) {
+  z-index: 5;
+}
+.active-chip {
+  background-color: rgba(33, 150, 243, 0.15);
+}
+
+.chip-mg-3 {
+  margin: 0.5rem;
+}

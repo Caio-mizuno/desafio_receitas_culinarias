@@ -2,9 +2,9 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <h1 class="text-h3 font-weight-bold mb-6">Receitas Culinárias</h1>
-
         <v-card class="mb-6" elevation="2">
+          <v-card-title class="text-h3 font-weight-bold mb-6">O que você quer cozinhar hoje?</v-card-title>
+          <v-card-subtitle class="text-h5 font-weight-bold mb-6">Encontre receitas deliciosas com base em seus ingredientes favoritos.</v-card-subtitle>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
@@ -46,14 +46,14 @@
           </v-card-text>
         </v-card>
 
-        <v-row v-if="recipeStore.loading">
+        <v-row v-if="loading">
           <v-col cols="12" sm="6" md="4" lg="3" v-for="n in 8" :key="n">
             <v-skeleton-loader type="card" />
           </v-col>
         </v-row>
 
-        <v-row v-else-if="filteredRecipes.length > 0">
-          <v-col cols="12" sm="6" md="4" lg="3" v-for="recipe in filteredRecipes" :key="recipe.id">
+        <v-row v-else-if="recipes.length > 0">
+          <v-col cols="12" sm="6" md="4" lg="3" v-for="recipe in recipes" :key="recipe.id">
             <v-card
               hover
               elevation="3"
@@ -102,6 +102,12 @@
           </v-col>
         </v-row>
 
+        <v-row v-if="canLoadMore(pagination) && !loading">
+          <v-col cols="12" class="d-flex justify-center">
+            <v-btn color="primary" variant="tonal" @click="loadMore">Carregar mais</v-btn>
+          </v-col>
+        </v-row>
+
         <v-row v-else>
           <v-col cols="12" class="text-center">
             <v-icon size="128" color="grey-lighten-2" class="mb-4">mdi-chef-hat</v-icon>
@@ -114,41 +120,40 @@
       </v-col>
     </v-row>
   </v-container>
-  
+
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useRecipeStore } from '@/stores/recipe.store'
 import { useCategoryStore } from '@/stores/category.store'
-import { debounce } from './service'
+import { debounce, buildRecipeFilters, fetchPaginatedRecipes, updatePaginationInfo, canLoadMore } from './service'
 import './styles.css'
 
 const router = useRouter()
-const recipeStore = useRecipeStore()
 const categoryStore = useCategoryStore()
 
 const searchTerm = ref('')
 const selectedCategory = ref<number | null>(null)
-
-const filteredRecipes = computed(() => recipeStore.filteredRecipes)
+const recipes = ref([] as any[])
+const loading = ref(false)
+const error = ref<string | null>(null)
+const pagination = ref({ page: 1, limit: 12, total: 0, totalPages: 1 })
 
 const debouncedSearch = debounce(() => {
   applyFilters()
 }, 500)
 
-const applyFilters = () => {
-  recipeStore.setFilters({
-    nome: searchTerm.value || undefined,
-    categoriaId: selectedCategory.value || undefined,
-  })
+const applyFilters = async () => {
+  pagination.value.page = 1
+  await loadPage()
 }
 
-const clearFilters = () => {
+const clearFilters = async () => {
   searchTerm.value = ''
   selectedCategory.value = null
-  recipeStore.clearFilters()
+  pagination.value.page = 1
+  await loadPage()
 }
 
 const goToRecipe = (id: number) => {
@@ -161,10 +166,32 @@ const getCategoryName = (categoriaId: number) => {
 }
 
 onMounted(async () => {
-  await Promise.all([
-    recipeStore.fetchRecipes(),
-    categoryStore.fetchCategories(),
-  ])
+  await categoryStore.fetchCategories()
+  await loadPage()
 })
-</script>
 
+async function loadPage() {
+  loading.value = true
+  error.value = null
+  try {
+    const filters = buildRecipeFilters(searchTerm.value, selectedCategory.value)
+    const data = await fetchPaginatedRecipes(pagination.value.page, pagination.value.limit, filters)
+    if (pagination.value.page === 1) {
+      recipes.value = data.response
+    } else {
+      recipes.value = [...recipes.value, ...data.response]
+    }
+    updatePaginationInfo(pagination.value, data.total)
+  } catch (e: any) {
+    error.value = e?.response?.data?.message || 'Erro ao carregar receitas'
+  } finally {
+    loading.value = false
+  }
+}
+
+async function loadMore() {
+  if (!canLoadMore(pagination.value)) return
+  pagination.value.page += 1
+  await loadPage()
+}
+</script>

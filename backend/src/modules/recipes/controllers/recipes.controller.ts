@@ -21,6 +21,7 @@ import { CreateRecipeDto, UpdateRecipeDto } from '../dto/recipe.dto';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
 import { Public } from 'src/common/decorators/is-public.decorator';
 import { DefaultResponseDto } from 'src/common/dtos/default-response.dto';
+import { DefaultPaginationResponseDto } from 'src/common/dtos/default-pagination-response.dto';
 import { RecipeCreateOkResponseDto } from '../dto/swagger/recipe-create-ok-response.dto';
 import { RecipesListOkResponseDto } from '../dto/swagger/recipes-list-ok-response.dto';
 import { RecipeGetOkResponseDto } from '../dto/swagger/recipe-get-ok-response.dto';
@@ -52,6 +53,7 @@ export class RecipesController {
   @Get()
   @ApiQuery({ name: 'categoriaId', required: false, type: Number })
   @ApiQuery({ name: 'nome', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiOkResponse({
     description: 'Receitas listadas com sucesso',
@@ -60,15 +62,28 @@ export class RecipesController {
   findAll(
     @Query('categoriaId') categoriaId?: number,
     @Query('nome') nome?: string,
+    @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
     return this.recipesService
-      .findAll({ categoriaId, nome, limit })
+      .findAllPaginated({
+        categoriaId,
+        nome,
+        page,
+        limit,
+      })
       .then(
         (res) =>
-          new DefaultResponseDto(res, 'Receitas listadas com sucesso', true),
+          new DefaultPaginationResponseDto(
+            res.items,
+            page ?? 1,
+            res.total,
+            res.items.length > 0,
+          ),
       )
-      .catch((err) => new DefaultResponseDto(err.message,'Erro ao listar',false));
+      .catch(
+        (err) => new DefaultResponseDto(err.message, 'Erro ao listar', false),
+      );
   }
 
   @Public()

@@ -1,5 +1,5 @@
 import type { Recipe, Category } from '@/types/recipe.types'
-import type { DefaultResponse } from '@/types/auth.types'
+import type { DefaultResponse, DefaultPaginationResponse } from '@/types/auth.types'
 
 // Dados mockados para demonstração
 const mockCategories: Category[] = [
@@ -135,6 +135,33 @@ export class MockService {
       response: filteredRecipes,
       message: 'Receitas listadas com sucesso',
       status: true
+    }
+  }
+
+  static async getRecipesPaginated(page: number, limit: number, filters?: { categoriaId?: number; nome?: string }): Promise<DefaultPaginationResponse<Recipe[]>> {
+    await this.delay(800)
+
+    let filteredRecipes = [...mockRecipes]
+
+    if (filters?.categoriaId) {
+      filteredRecipes = filteredRecipes.filter(r => r.categoriaId === filters.categoriaId)
+    }
+
+    if (filters?.nome) {
+      const searchTerm = filters.nome.toLowerCase()
+      filteredRecipes = filteredRecipes.filter(r => r.nome.toLowerCase().includes(searchTerm))
+    }
+
+    const total = filteredRecipes.length
+    const start = Math.max(0, (page - 1) * limit)
+    const end = start + limit
+    const paginated = filteredRecipes.slice(start, end)
+
+    return {
+      response: paginated,
+      page,
+      total,
+      status: paginated.length > 0,
     }
   }
 

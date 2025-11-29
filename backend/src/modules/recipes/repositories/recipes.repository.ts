@@ -43,6 +43,37 @@ export class RecipesRepository {
     return qb.getMany();
   }
 
+  async findAllWithPagination(query?: {
+    categoriaId?: number;
+    nome?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ items: Recipe[]; total: number }> {
+    const qb = this.typeOrmRepository.createQueryBuilder('recipe');
+    qb.leftJoinAndSelect('recipe.categoria', 'categoria');
+    qb.leftJoinAndSelect('recipe.usuario', 'usuario');
+    qb.orderBy('recipe.criadoEm', 'DESC');
+
+    if (query?.categoriaId) {
+      qb.andWhere('recipe.categoriaId = :categoriaId', {
+        categoriaId: query.categoriaId,
+      });
+    }
+
+    if (query?.nome) {
+      qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
+    }
+
+    const page = query?.page && query.page > 0 ? query.page : 1;
+    const limit = query?.limit && query.limit > 0 ? query.limit : 12;
+    const skip = (page - 1) * limit;
+
+    qb.skip(skip).take(limit);
+
+    const [items, total] = await qb.getManyAndCount();
+    return { items, total };
+  }
+
   async findById(id: number): Promise<Recipe | null> {
     return this.typeOrmRepository.findOne({
       where: { id },

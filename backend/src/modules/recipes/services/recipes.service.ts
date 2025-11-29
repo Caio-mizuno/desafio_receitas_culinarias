@@ -28,6 +28,15 @@ export class RecipesService {
     return this.recipeRepository.findAll(query);
   }
 
+  async findAllPaginated(query?: {
+    categoriaId?: number;
+    nome?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ items: Recipe[]; total: number }> {
+    return this.recipeRepository.findAllWithPagination(query);
+  }
+
   async findOne(id: number): Promise<Recipe> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {

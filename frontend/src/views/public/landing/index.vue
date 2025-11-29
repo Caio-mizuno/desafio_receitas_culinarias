@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <v-sheet color="transparent" class="hero-section"> -->
     <v-container class="py-12">
       <v-row align="center">
         <v-col cols="12" class="hero-banner">
@@ -97,7 +96,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <!-- </v-sheet> -->
 
     <v-container>
       <v-row>
@@ -146,6 +144,7 @@
                     <v-spacer />
                     <v-btn
                       color="primary"
+                      class="mb-4"
                       @click="goToRecipe(recipe.id)"
                       variant="elevated"
                       >Ver Receita</v-btn
@@ -167,9 +166,14 @@ import { useRouter } from "vue-router";
 import { useRecipeStore } from "@/stores/recipe.store";
 import { useCategoryStore } from "@/stores/category.store";
 import { useAuthStore } from "@/stores/auth.store";
-import apiClient from "@/plugins/axios";
-import { MockService } from "@/services/mock.service";
 import type { Recipe } from "@/types/recipe.types";
+import {
+  getCategoryNameFromList,
+  navigateToRecipes,
+  navigateToCreate,
+  navigateToRecipe,
+  getRecipesByCategory,
+} from "./service";
 
 const router = useRouter();
 const recipeStore = useRecipeStore();
@@ -196,26 +200,18 @@ const topCategories = computed(() => {
   return categoryStore.categories.slice(0, 6);
 });
 
-const getCategoryName = (categoriaId: number) => {
-  const c = categoryStore.categories.find((c) => c.id === categoriaId);
-  return c?.nome || "Sem Categoria";
-};
+const getCategoryName = (categoriaId: number) =>
+  getCategoryNameFromList(categoryStore.categories, categoriaId);
 
-const goToRecipes = () => router.push("/receitas");
-const goToCreate = () => router.push("/minhas-receitas/nova");
-const goToRecipe = (id: number) => router.push(`/receitas/${id}`);
+const goToRecipes = () => navigateToRecipes(router);
+const goToCreate = () => navigateToCreate(router);
+const goToRecipe = (id: number) => navigateToRecipe(router, id);
 
 const selectCategory = async (id: number) => {
   selectedCategoryId.value = id;
   categoryLoading.value = true;
   try {
-    const resp = await apiClient.get("/recipes", {
-      params: { categoriaId: id, limit: 5 },
-    });
-    categoryRecipes.value = resp.data.response || [];
-  } catch (err: any) {
-    const fallback = await MockService.getRecipes({ categoriaId: id });
-    categoryRecipes.value = fallback.response.slice(0, 5);
+    categoryRecipes.value = await getRecipesByCategory(id, 5);
   } finally {
     categoryLoading.value = false;
   }
@@ -228,60 +224,4 @@ onMounted(async () => {
 });
 </script>
 
-<style scoped>
-.hero-banner {
-  position: relative;
-}
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: flex-end;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
-}
-.hero-section {
-  background: linear-gradient(135deg, #fff 0%, #fff 40%, #f5f7fb 100%);
-}
-.img-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 100%);
-}
-.text-truncate-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.carousel-margin {
-  margin: 0 2rem;
-}
-
-.carousel-card {
-  width: 60%;
-  margin: 0 auto;
-}
-@media (max-width: 600px) {
-  .carousel-card {
-    width: 80%;
-    margin: 0 auto;
-  }
-}
-.carousel-container {
-  overflow: visible;
-}
-.carousel-container :deep(.v-window__container) {
-  overflow: visible;
-}
-.carousel-container :deep(.v-window__controls) {
-  z-index: 5;
-}
-.active-chip {
-  background-color: rgba(33, 150, 243, 0.15);
-}
-
-.chip-mg-3 {
-  margin: 0.5rem;
-}
-</style>
+<style src="@/views/public/landing/style.css" scoped></style>

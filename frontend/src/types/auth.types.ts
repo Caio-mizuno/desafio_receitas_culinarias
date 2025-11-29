@@ -20,3 +20,10 @@ export interface DefaultResponse<T> {
   message: string
   status: boolean
 }
+
+export interface DefaultPaginationResponse<T> {
+  response: T
+  page: number
+  total: number
+  status: boolean
+}
