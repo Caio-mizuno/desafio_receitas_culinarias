@@ -27,3 +27,9 @@ export interface DefaultPaginationResponse<T> {
   total: number
   status: boolean
 }
+
+export interface RegisterCredentials {
+  nome: string
+  login: string
+  senha: string
+}

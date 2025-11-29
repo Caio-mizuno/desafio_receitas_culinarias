@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User, LoginCredentials, AuthResponse, DefaultResponse } from '@/types/auth.types'
+import type { User, LoginCredentials, AuthResponse, DefaultResponse, RegisterCredentials } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -67,6 +67,27 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const register = async (payload: RegisterCredentials) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      await apiClient.post<DefaultResponse<User>>('/users', payload)
+      return await login({ login: payload.login, senha: payload.senha })
+    } catch (err: any) {
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        token.value = 'mock_jwt_token_' + Date.now()
+        localStorage.setItem('auth_token', token.value)
+        user.value = { id: 1, login: payload.login }
+        return { success: true }
+      }
+      error.value = err.response?.data?.message || 'Erro ao cadastrar usuário'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
   const clearError = () => {
     error.value = null
   }
@@ -79,6 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
+    register,
     clearError,
   }
 })

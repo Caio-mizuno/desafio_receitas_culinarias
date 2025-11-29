@@ -57,13 +57,6 @@
             <RecipeCard :recipe="recipe" :categoryName="getCategoryName(recipe.categoriaId)" @view="goToRecipe" />
           </v-col>
         </v-row>
-
-        <v-row v-if="canLoadMore(pagination) && !loading">
-          <v-col cols="12" class="d-flex justify-center">
-            <v-btn color="primary" variant="tonal" @click="loadMore">Carregar mais</v-btn>
-          </v-col>
-        </v-row>
-
         <v-row v-else>
           <v-col cols="12" class="text-center">
             <v-icon size="128" color="grey-lighten-2" class="mb-4">mdi-chef-hat</v-icon>
@@ -73,6 +66,13 @@
             </p>
           </v-col>
         </v-row>
+
+        <v-row v-if="canLoadMore(pagination) && !loading">
+          <v-col cols="12" class="d-flex justify-center">
+            <v-btn color="primary" variant="tonal" @click="loadMore">Carregar mais</v-btn>
+          </v-col>
+        </v-row>
+
       </v-col>
     </v-row>
   </v-container>
