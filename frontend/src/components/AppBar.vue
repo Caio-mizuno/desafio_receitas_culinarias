@@ -13,10 +13,6 @@
           <v-icon start>mdi-book-outline</v-icon>
           Minhas Receitas
         </v-tab>
-        <v-tab value="nova" @click="goToCreateRecipe">
-          <v-icon start>mdi-plus</v-icon>
-          Nova Receita
-        </v-tab>
         <v-tab value="perfil" @click="goToProfile">
           <v-icon start>mdi-account-outline</v-icon>
           Perfil

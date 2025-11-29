@@ -29,10 +29,15 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response?.status === 401) {
-      // Token inválido ou expirado
+    const status = error.response?.status
+    if (status === 401 || status === 403) {
+      const currentPath = window.location.pathname
+      const isLoginRoute = currentPath.startsWith('/login')
+      const requestUrl: string = error.config?.url || ''
       localStorage.removeItem('auth_token')
-      window.location.href = '/login'
+      if (!isLoginRoute && !requestUrl.includes('/auth/login')) {
+        window.location.replace('/login')
+      }
     }
     return Promise.reject(error)
   }

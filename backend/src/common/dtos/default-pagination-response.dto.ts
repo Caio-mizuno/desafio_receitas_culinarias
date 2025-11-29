@@ -13,10 +13,25 @@ export class DefaultPaginationResponseDto {
   @ApiProperty()
   status: boolean;
 
-  constructor(response: any, page: number, total: number, items: boolean) {
+  @ApiProperty()
+  finalPage?: number;
+
+  @ApiProperty({ nullable: true })
+  nextPage?: number | null;
+
+  constructor(
+    response: any,
+    page: number,
+    total: number,
+    items: boolean,
+    finalPage?: number,
+    nextPage?: number | null,
+  ) {
     this.response = response;
     this.page = page;
     this.total = total;
     this.status = items;
+    this.finalPage = finalPage;
+    this.nextPage = nextPage;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="fill-height pa-0 ">
+  <v-container fluid class="fill-height pa-0">
     <v-row align="center" justify="center" width="100%">
       <v-col cols="12" sm="8" md="6" class="d-none d-md-block"
         ><v-img
@@ -11,10 +11,7 @@
         />
       </v-col>
 
-      <v-divider class="d-none" /><v-divider
-        vertical
-        class="mx-1 d-none d-md-block"
-      />
+      <v-divider class="d-none" /><v-divider vertical class="mx-1 d-none d-md-block" />
 
       <v-col cols="12" md="5" height="90vh">
         <v-card elevation="8" class="pa-6 align-content-center login-card" height="90vh">
@@ -23,7 +20,9 @@
               <v-card-title class="text-center mb-4">
                 <v-icon size="48" color="primary" class="mb-2">mdi-chef-hat</v-icon>
                 <h1 class="text-h4 font-weight-bold">Receitas Culinárias</h1>
-                <p class="text-subtitle-1 text-grey">Entre para gerenciar suas receitas</p>
+                <p class="text-subtitle-1 text-grey">
+                  Entre para gerenciar suas receitas
+                </p>
               </v-card-title>
 
               <v-row align="stretch" class="mt-2">
@@ -78,10 +77,15 @@
               <v-divider class="my-4" />
 
               <v-card-text class="text-center text-grey">
-                <p class="text-caption">Use login: admin / senha: admin para testar</p>
+                <p class="text-caption">Use as seguintes credenciais pra teste</p>
+                <p class="text-caption">login: caio.dev / senha: admin</p>
                 <div class="mt-2">
                   <span class="text-subtitle-2">Não possui uma conta?</span>
-                  <v-btn variant="outlined" color="primary" class="ml-2" @click="isRegisterMode = true"
+                  <v-btn
+                    variant="outlined"
+                    color="primary"
+                    class="ml-2"
+                    @click="isRegisterMode = true"
                     >Cadastre-se</v-btn
                   >
                 </div>
@@ -92,7 +96,9 @@
               <v-card-title class="text-center mb-4">
                 <v-icon size="48" color="primary" class="mb-2">mdi-account-plus</v-icon>
                 <h1 class="text-h4 font-weight-bold">Criar sua conta</h1>
-                <p class="text-subtitle-1 text-grey">Junte-se para salvar e gerenciar receitas</p>
+                <p class="text-subtitle-1 text-grey">
+                  Junte-se para salvar e gerenciar receitas
+                </p>
               </v-card-title>
 
               <v-form @submit.prevent="handleRegister" ref="registerFormRef">
@@ -101,7 +107,7 @@
                   label="Nome"
                   prepend-inner-icon="mdi-account"
                   variant="outlined"
-                  :rules="[v => !!v || 'Nome é obrigatório']"
+                  :rules="[(v) => !!v || 'Nome é obrigatório']"
                   required
                   class="mb-4"
                 />
@@ -111,7 +117,7 @@
                   label="Login"
                   prepend-inner-icon="mdi-account-circle"
                   variant="outlined"
-                  :rules="[v => !!v || 'Login é obrigatório']"
+                  :rules="[(v) => !!v || 'Login é obrigatório']"
                   required
                   class="mb-4"
                 />
@@ -122,7 +128,7 @@
                   prepend-inner-icon="mdi-lock"
                   variant="outlined"
                   type="password"
-                  :rules="[v => !!v || 'Senha é obrigatória']"
+                  :rules="[(v) => !!v || 'Senha é obrigatória']"
                   required
                   class="mb-2"
                 />
@@ -133,7 +139,7 @@
                   prepend-inner-icon="mdi-lock-check"
                   variant="outlined"
                   type="password"
-                  :rules="[v => v === registerForm.senha || 'As senhas não conferem']"
+                  :rules="[(v) => v === registerForm.senha || 'As senhas não conferem']"
                   required
                   class="mb-4"
                 />
@@ -166,7 +172,9 @@
 
               <v-card-text class="text-center text-grey">
                 <p class="text-subtitle-2 mb-2">Já tem uma conta?</p>
-                <v-btn variant="outlined" color="primary" @click="isRegisterMode = false">Entrar</v-btn>
+                <v-btn variant="outlined" color="primary" @click="isRegisterMode = false"
+                  >Entrar</v-btn
+                >
               </v-card-text>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Recipe, RecipeFilters, Category, PaginationInfo } from '@/types/recipe.types'
-import type { DefaultResponse } from '@/types/auth.types'
+import type { DefaultResponse, DefaultPaginationResponse } from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
 import { MockService } from '@/services/mock.service'
 
@@ -53,6 +53,118 @@ export const useRecipeStore = defineStore('recipe', () => {
         return { success: true }
       }
       error.value = err.response?.data?.message || 'Erro ao buscar receitas'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const fetchRecipesPaginated = async (
+    page: number = pagination.value.page,
+    limit: number = pagination.value.limit,
+    params?: RecipeFilters,
+  ) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes', {
+        params: { page, limit, ...(params || filters.value) }
+      })
+      recipes.value = response.data.response
+      const total = response.data.total || 0
+      const totalPages = Math.max(1, Math.ceil(total / limit))
+      const currentPage = Math.min(Math.max(page, 1), totalPages)
+      if (currentPage !== page) {
+        const refetch = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes', {
+          params: { page: currentPage, limit, ...(params || filters.value) }
+        })
+        recipes.value = refetch.data.response
+      }
+      pagination.value = {
+        page: currentPage,
+        limit,
+        total,
+        totalPages,
+      }
+      return { success: true }
+    } catch (err: any) {
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+        const response = await MockService.getRecipesPaginated(page, limit, params || filters.value)
+        const total = response.total || 0
+        const totalPages = Math.max(1, Math.ceil(total / limit))
+        const currentPage = Math.min(Math.max(page, 1), totalPages)
+        if (currentPage !== page) {
+          const refetch = await MockService.getRecipesPaginated(currentPage, limit, params || filters.value)
+          recipes.value = refetch.response
+        } else {
+          recipes.value = response.response
+        }
+        pagination.value = {
+          page: currentPage,
+          limit,
+          total,
+          totalPages,
+        }
+        return { success: true }
+      }
+      error.value = err.response?.data?.message || 'Erro ao buscar receitas paginadas'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const fetchMyRecipesPaginated = async (
+    page: number = pagination.value.page,
+    limit: number = pagination.value.limit,
+    params?: RecipeFilters,
+  ) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes/my', {
+        params: { page, limit, ...(params || filters.value) }
+      })
+      recipes.value = response.data.response
+      const total = response.data.total || 0
+      const totalPages = Math.max(1, Math.ceil(total / limit))
+      const currentPage = Math.min(Math.max(page, 1), totalPages)
+      if (currentPage !== page) {
+        const refetch = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes/my', {
+          params: { page: currentPage, limit, ...(params || filters.value) }
+        })
+        recipes.value = refetch.data.response
+      }
+      pagination.value = {
+        page: currentPage,
+        limit,
+        total,
+        totalPages,
+      }
+      return { success: true }
+    } catch (err: any) {
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+        const response = await MockService.getRecipesPaginated(page, limit, params || filters.value)
+        const total = response.total || 0
+        const totalPages = Math.max(1, Math.ceil(total / limit))
+        const currentPage = Math.min(Math.max(page, 1), totalPages)
+        if (currentPage !== page) {
+          const refetch = await MockService.getRecipesPaginated(currentPage, limit, params || filters.value)
+          recipes.value = refetch.response
+        } else {
+          recipes.value = response.response
+        }
+        pagination.value = {
+          page: currentPage,
+          limit,
+          total,
+          totalPages,
+        }
+        return { success: true }
+      }
+      error.value = err.response?.data?.message || 'Erro ao buscar receitas paginadas'
       return { success: false, error: error.value }
     } finally {
       loading.value = false
@@ -156,6 +268,8 @@ export const useRecipeStore = defineStore('recipe', () => {
     pagination,
     filteredRecipes,
     fetchRecipes,
+    fetchRecipesPaginated,
+    fetchMyRecipesPaginated,
     fetchRecipeById,
     createRecipe,
     updateRecipe,

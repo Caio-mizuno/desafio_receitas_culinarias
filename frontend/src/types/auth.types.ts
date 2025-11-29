@@ -3,6 +3,8 @@ export interface User {
   login: string
   email?: string
   createdAt?: string
+  nome?: string
+  criadoEm?: string
 }
 
 export interface LoginCredentials {

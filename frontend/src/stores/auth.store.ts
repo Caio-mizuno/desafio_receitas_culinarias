@@ -88,6 +88,19 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const fetchProfile = async () => {
+    try {
+      const profile = await apiClient.get<DefaultResponse<User>>('/users/profile')
+      user.value = profile.data.response
+      return profile.data.response
+    } catch (err: any) {
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        return null
+      }
+      throw err
+    }
+  }
+
   const clearError = () => {
     error.value = null
   }
@@ -101,6 +114,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     register,
+    fetchProfile,
     clearError,
   }
 })

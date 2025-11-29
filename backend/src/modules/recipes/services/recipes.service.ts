@@ -24,6 +24,7 @@ export class RecipesService {
     categoriaId?: number;
     nome?: string;
     limit?: number;
+    usuarioId?: number;
   }): Promise<Recipe[]> {
     return this.recipeRepository.findAll(query);
   }
@@ -33,8 +34,24 @@ export class RecipesService {
     nome?: string;
     page?: number;
     limit?: number;
-  }): Promise<{ items: Recipe[]; total: number }> {
-    return this.recipeRepository.findAllWithPagination(query);
+    usuarioId?: number;
+  }): Promise<{
+    items: Recipe[];
+    total: number;
+    page: number;
+    finalPage: number;
+    nextPage: number | null;
+  }> {
+    const page = Number(query?.page && query.page > 0 ? query.page : 1);
+    const limit = query?.limit && query.limit > 0 ? query.limit : 12;
+
+    const { items, total } =
+      await this.recipeRepository.findAllWithPagination(query);
+
+    const finalPage = Math.max(1, Math.ceil(total / limit));
+    const nextPage = page < finalPage ? page + 1 : null;
+
+    return { items, total, page, finalPage, nextPage };
   }
 
   async findOne(id: number): Promise<Recipe> {

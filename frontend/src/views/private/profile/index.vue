@@ -20,16 +20,16 @@
                 <template #prepend>
                   <v-icon color="primary">mdi-account</v-icon>
                 </template>
-                <v-list-item-title>Login</v-list-item-title>
-                <v-list-item-subtitle>{{ authStore.user?.login || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-title>Nome</v-list-item-title>
+                <v-list-item-subtitle>{{ authStore.user?.nome || 'Não informado' }}</v-list-item-subtitle>
               </v-list-item>
 
               <v-list-item>
                 <template #prepend>
-                  <v-icon color="primary">mdi-email-outline</v-icon>
+                  <v-icon color="primary">mdi-login-variant</v-icon>
                 </template>
-                <v-list-item-title>Email</v-list-item-title>
-                <v-list-item-subtitle>{{ authStore.user?.email || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-title>Login</v-list-item-title>
+                <v-list-item-subtitle>{{ authStore.user?.login || 'Não informado' }}</v-list-item-subtitle>
               </v-list-item>
 
               <v-list-item>
@@ -37,7 +37,7 @@
                   <v-icon color="primary">mdi-calendar-outline</v-icon>
                 </template>
                 <v-list-item-title>Membro desde</v-list-item-title>
-                <v-list-item-subtitle>{{ formatDate(authStore.user?.createdAt) || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{ formatDate(authStore.user?.criadoEm) || 'Não informado' }}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -126,10 +126,10 @@ const handleLogout = async () => {
 }
 
 onMounted(async () => {
+  await authStore.fetchProfile()
   await Promise.all([
     recipeStore.fetchRecipes(),
     categoryStore.fetchCategories()
   ])
 })
 </script>
-

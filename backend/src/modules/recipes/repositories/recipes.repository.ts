@@ -22,6 +22,7 @@ export class RecipesRepository {
     categoriaId?: number;
     nome?: string;
     limit?: number;
+    usuarioId?: number;
   }): Promise<Recipe[]> {
     const qb = this.typeOrmRepository.createQueryBuilder('recipe');
     qb.leftJoinAndSelect('recipe.categoria', 'categoria');
@@ -37,6 +38,9 @@ export class RecipesRepository {
     if (query?.nome) {
       qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
     }
+    if (query?.usuarioId) {
+      qb.andWhere('recipe.usuarioId = :usuarioId', { usuarioId: query.usuarioId });
+    }
     if (query?.limit && query.limit > 0) {
       qb.take(query.limit);
     }
@@ -48,6 +52,7 @@ export class RecipesRepository {
     nome?: string;
     page?: number;
     limit?: number;
+    usuarioId?: number;
   }): Promise<{ items: Recipe[]; total: number }> {
     const qb = this.typeOrmRepository.createQueryBuilder('recipe');
     qb.leftJoinAndSelect('recipe.categoria', 'categoria');
@@ -62,6 +67,9 @@ export class RecipesRepository {
 
     if (query?.nome) {
       qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
+    }
+    if (query?.usuarioId) {
+      qb.andWhere('recipe.usuarioId = :usuarioId', { usuarioId: query.usuarioId });
     }
 
     const page = query?.page && query.page > 0 ? query.page : 1;

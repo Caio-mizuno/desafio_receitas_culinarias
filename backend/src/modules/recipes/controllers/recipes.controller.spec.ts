@@ -10,6 +10,7 @@ describe('RecipesController', () => {
   const mockRecipesService = {
     create: jest.fn(),
     findAll: jest.fn(),
+    findAllPaginated: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
@@ -70,9 +71,9 @@ describe('RecipesController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return recipes with query filters', async () => {
-      const result: Recipe[] = [
+  describe('findAll (paginated)', () => {
+    it('should return paginated recipes with finalPage and nextPage', async () => {
+      const items: Recipe[] = [
         {
           id: 1,
           usuarioId: 10,
@@ -88,18 +89,49 @@ describe('RecipesController', () => {
           categoria: undefined,
         } as any,
       ];
-
-      mockRecipesService.findAll.mockResolvedValue(result);
-
-      const wrappedList = await controller.findAll(1 as any, 'Bolo');
-      expect(wrappedList).toEqual({
-        response: result,
-        message: 'Receitas listadas com sucesso',
-        status: true,
+      mockRecipesService.findAllPaginated.mockResolvedValue({
+        items,
+        total: 25,
+        page: 1,
+        finalPage: 3,
+        nextPage: 2,
       });
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith({
+
+      const wrappedList = await controller.findAll(1 as any, 'Bolo', 1 as any, 12 as any);
+      expect(wrappedList).toEqual({
+        response: items,
+        page: 1,
+        total: 25,
+        status: true,
+        finalPage: 3,
+        nextPage: 2,
+      });
+      expect(mockRecipesService.findAllPaginated).toHaveBeenCalledWith({
         categoriaId: 1,
         nome: 'Bolo',
+        page: 1,
+        limit: 12,
+      });
+    });
+
+    it('should return nextPage null when on last page', async () => {
+      const items: Recipe[] = [];
+      mockRecipesService.findAllPaginated.mockResolvedValue({
+        items,
+        total: 24,
+        page: 2,
+        finalPage: 2,
+        nextPage: null,
+      });
+
+      const wrappedList = await controller.findAll(undefined, undefined, 2 as any, 12 as any);
+      expect(wrappedList).toEqual({
+        response: items,
+        page: 2,
+        total: 24,
+        status: false,
+        finalPage: 2,
+        nextPage: null,
       });
     });
   });

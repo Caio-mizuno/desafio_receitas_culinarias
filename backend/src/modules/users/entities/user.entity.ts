@@ -1,4 +1,5 @@
 import { Entity, Column, OneToMany } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { Recipe } from '../../recipes/entities/recipe.entity';
 import { BaseEntity } from '../../../common/entities/base.entity';
 
@@ -11,6 +12,7 @@ export class User extends BaseEntity {
   login: string;
 
   @Column({ name: 'senha', type: 'varchar', length: 100 })
+  @Exclude()
   senha: string;
 
   @OneToMany(() => Recipe, (recipe) => recipe.usuario)

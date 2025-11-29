@@ -23,7 +23,6 @@ import { Public } from 'src/common/decorators/is-public.decorator';
 import { DefaultResponseDto } from 'src/common/dtos/default-response.dto';
 import { DefaultPaginationResponseDto } from 'src/common/dtos/default-pagination-response.dto';
 import { RecipeCreateOkResponseDto } from '../dto/swagger/recipe-create-ok-response.dto';
-import { RecipesListOkResponseDto } from '../dto/swagger/recipes-list-ok-response.dto';
 import { RecipeGetOkResponseDto } from '../dto/swagger/recipe-get-ok-response.dto';
 import { RecipeUpdateOkResponseDto } from '../dto/swagger/recipe-update-ok-response.dto';
 import { RecipeRemoveOkResponseDto } from '../dto/swagger/recipe-remove-ok-response.dto';
@@ -57,7 +56,7 @@ export class RecipesController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   @ApiOkResponse({
     description: 'Receitas listadas com sucesso',
-    type: RecipesListOkResponseDto,
+    type: DefaultPaginationResponseDto,
   })
   findAll(
     @Query('categoriaId') categoriaId?: number,
@@ -76,9 +75,53 @@ export class RecipesController {
         (res) =>
           new DefaultPaginationResponseDto(
             res.items,
-            page ?? 1,
+            res.page,
             res.total,
             res.items.length > 0,
+            res.finalPage,
+            res.nextPage,
+          ),
+      )
+      .catch(
+        (err) => new DefaultResponseDto(err.message, 'Erro ao listar', false),
+      );
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get('my')
+  @ApiQuery({ name: 'categoriaId', required: false, type: Number })
+  @ApiQuery({ name: 'nome', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOkResponse({
+    description: 'Minhas receitas listadas com sucesso',
+    type: DefaultPaginationResponseDto,
+  })
+  findMine(
+    @Query('categoriaId') categoriaId?: number,
+    @Query('nome') nome?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Request() req?,
+  ) {
+    return this.recipesService
+      .findAllPaginated({
+        categoriaId,
+        nome,
+        page,
+        limit,
+        usuarioId: req.user?.id,
+      })
+      .then(
+        (res) =>
+          new DefaultPaginationResponseDto(
+            res.items,
+            res.page,
+            res.total,
+            res.items.length > 0,
+            res.finalPage,
+            res.nextPage,
           ),
       )
       .catch(
