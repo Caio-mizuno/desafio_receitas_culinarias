@@ -48,8 +48,9 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   @ApiOkResponse({ description: 'Perfil obtido com sucesso', type: UserProfileOkResponseDto })
-  getProfile(@Request() req) {
-    return new DefaultResponseDto(req.user, 'Perfil obtido com sucesso', true);
+  async getProfile(@Request() req) {
+    const res = await this.userService.getProfileWithStats(req.user);
+    return new DefaultResponseDto(res, 'Perfil obtido com sucesso', true);
   }
 
   @ApiBearerAuth()

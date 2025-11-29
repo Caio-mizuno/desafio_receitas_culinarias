@@ -55,12 +55,12 @@
             <v-row>
               <v-col cols="6" class="text-center">
                 <v-icon size="48" color="primary" class="mb-2">mdi-chef-hat</v-icon>
-                <div class="text-h4">{{ recipeStore.recipes.length }}</div>
+                <div class="text-h4">{{ authStore.user?.receitasCriadas ?? 0 }}</div>
                 <div class="text-caption text-grey">Receitas Criadas</div>
               </v-col>
               <v-col cols="6" class="text-center">
                 <v-icon size="48" color="secondary" class="mb-2">mdi-tag-outline</v-icon>
-                <div class="text-h4">{{ categoryStore.categories.length }}</div>
+                <div class="text-h4">{{ authStore.user?.categoriasUtilizadas ?? 0 }}</div>
                 <div class="text-caption text-grey">Categorias</div>
               </v-col>
             </v-row>
@@ -95,13 +95,9 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
-import { useRecipeStore } from '@/stores/recipe.store'
-import { useCategoryStore } from '@/stores/category.store'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const recipeStore = useRecipeStore()
-const categoryStore = useCategoryStore()
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return null
@@ -127,9 +123,5 @@ const handleLogout = async () => {
 
 onMounted(async () => {
   await authStore.fetchProfile()
-  await Promise.all([
-    recipeStore.fetchRecipes(),
-    categoryStore.fetchCategories()
-  ])
 })
 </script>

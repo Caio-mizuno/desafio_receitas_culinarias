@@ -5,6 +5,8 @@ export interface User {
   createdAt?: string
   nome?: string
   criadoEm?: string
+  receitasCriadas?: number
+  categoriasUtilizadas?: number
 }
 
 export interface LoginCredentials {

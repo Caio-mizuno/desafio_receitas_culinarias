@@ -92,4 +92,17 @@ export class RecipesRepository {
   async remove(recipe: Recipe): Promise<Recipe> {
     return this.typeOrmRepository.remove(recipe);
   }
+
+  async countByUser(userId: number): Promise<number> {
+    return this.typeOrmRepository.count({ where: { usuarioId: userId } });
+  }
+
+  async countDistinctCategoriesByUser(userId: number): Promise<number> {
+    const qb = this.typeOrmRepository.createQueryBuilder('recipe');
+    qb.select('COUNT(DISTINCT recipe.categoriaId)', 'count')
+      .where('recipe.usuarioId = :userId', { userId })
+      .andWhere('recipe.categoriaId IS NOT NULL');
+    const res = await qb.getRawOne<{ count: string }>();
+    return Number(res?.count || 0);
+  }
 }

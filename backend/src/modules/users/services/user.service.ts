@@ -8,10 +8,14 @@ import { CreateUserDto, UpdateUserDto } from '../dtos/create-user';
 import * as bcrypt from 'bcrypt';
 import { SALTS_OR_ROUNDS } from 'src/common/constants/salts-or-rounds.constants';
 import { UsersRepository } from '../repositories/users.repository';
+import { RecipesRepository } from '../../recipes/repositories/recipes.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UsersRepository) {}
+  constructor(
+    private readonly userRepository: UsersRepository,
+    private readonly recipesRepository: RecipesRepository,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepository.findByLogin(
@@ -77,5 +81,20 @@ export class UserService {
   async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
+  }
+
+  async getProfileWithStats(user: User): Promise<User & {
+    receitasCriadas: number;
+    categoriasUtilizadas: number;
+  }> {
+    const receitasCriadas = await this.recipesRepository.countByUser(user.id);
+    const categoriasUtilizadas = await this.recipesRepository.countDistinctCategoriesByUser(
+      user.id,
+    );
+    return {
+      ...user,
+      receitasCriadas,
+      categoriasUtilizadas,
+    };
   }
 }
