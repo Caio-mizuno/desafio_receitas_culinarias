@@ -10,4 +10,3 @@ export class CategoryRemoveOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

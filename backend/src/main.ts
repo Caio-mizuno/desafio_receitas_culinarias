@@ -8,22 +8,33 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(AppConfigService);
 
-  const allowedOrigins =
-    configService.corsOrigins.length > 0
-      ? configService.corsOrigins
-      : ['http://localhost:5173'];
+  // CORS is handled by nginx in production
+  // Only enable in development when running without nginx
+  if (configService.nodeEnv === 'development' && !process.env.DISABLE_NEST_CORS) {
+    const allowedOrigins =
+      configService.corsOrigins.length > 0
+        ? configService.corsOrigins
+        : '*';
 
-  app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(null, false);
-    },
-    credentials: configService.corsCredentials,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  });
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    app.enableCors({
+      origin: allowedOrigins,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    });
+  }
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+      stopAtFirstError: true,
+    }),
+  );
+
+    // app.enableCors(); // Enables CORS with default settings
+
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   const config = new DocumentBuilder()

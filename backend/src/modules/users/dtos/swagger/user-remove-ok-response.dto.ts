@@ -10,4 +10,3 @@ export class UserRemoveOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

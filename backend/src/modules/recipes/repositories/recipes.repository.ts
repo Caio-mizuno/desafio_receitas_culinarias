@@ -39,7 +39,9 @@ export class RecipesRepository {
       qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
     }
     if (query?.usuarioId) {
-      qb.andWhere('recipe.usuarioId = :usuarioId', { usuarioId: query.usuarioId });
+      qb.andWhere('recipe.usuarioId = :usuarioId', {
+        usuarioId: query.usuarioId,
+      });
     }
     if (query?.limit && query.limit > 0) {
       qb.take(query.limit);
@@ -69,7 +71,9 @@ export class RecipesRepository {
       qb.andWhere('recipe.nome LIKE :nome', { nome: `%${query.nome}%` });
     }
     if (query?.usuarioId) {
-      qb.andWhere('recipe.usuarioId = :usuarioId', { usuarioId: query.usuarioId });
+      qb.andWhere('recipe.usuarioId = :usuarioId', {
+        usuarioId: query.usuarioId,
+      });
     }
 
     const page = query?.page && query.page > 0 ? query.page : 1;

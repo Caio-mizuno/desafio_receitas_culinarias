@@ -3,7 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { CreateUserDto } from '../src/modules/users/dtos/create-user';
-import { CreateCategoryDto, UpdateCategoryDto } from '../src/modules/categories/dto/category.dto';
+import {
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from '../src/modules/categories/dto/category.dto';
 
 describe('Categories (e2e)', () => {
   let app: INestApplication;
@@ -25,7 +28,10 @@ describe('Categories (e2e)', () => {
       senha: 'password123',
     };
 
-    await request(app.getHttpServer()).post('/users').send(mockUser).expect(201);
+    await request(app.getHttpServer())
+      .post('/users')
+      .send(mockUser)
+      .expect(201);
 
     const loginRes = await request(app.getHttpServer())
       .post('/auth/login')
@@ -56,14 +62,20 @@ describe('Categories (e2e)', () => {
   });
 
   it('/categories (GET) - List Categories (public)', async () => {
-    const res = await request(app.getHttpServer()).get('/categories').expect(200);
+    const res = await request(app.getHttpServer())
+      .get('/categories')
+      .expect(200);
     expect(res.body.status).toBe(true);
     expect(Array.isArray(res.body.response)).toBe(true);
-    expect(res.body.response.find((c: any) => c.id === categoryId)).toBeTruthy();
+    expect(
+      res.body.response.find((c: any) => c.id === categoryId),
+    ).toBeTruthy();
   });
 
   it('/categories/:id (GET) - Get Category (public)', async () => {
-    const res = await request(app.getHttpServer()).get(`/categories/${categoryId}`).expect(200);
+    const res = await request(app.getHttpServer())
+      .get(`/categories/${categoryId}`)
+      .expect(200);
     expect(res.body.status).toBe(true);
     expect(res.body.response.id).toBe(categoryId);
   });
@@ -88,4 +100,3 @@ describe('Categories (e2e)', () => {
     expect(res.body.response).toBeNull();
   });
 });
-

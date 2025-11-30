@@ -11,4 +11,3 @@ export class RecipeCreateOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

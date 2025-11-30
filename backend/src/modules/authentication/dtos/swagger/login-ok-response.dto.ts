@@ -4,7 +4,11 @@ class TokenResponseDto {
   @ApiProperty({ description: 'Token JWT de acesso' })
   access_token: string;
 
-  @ApiProperty({ description: 'Tempo de expiração do token conforme configuração da aplicação', example: '3600s' })
+  @ApiProperty({
+    description:
+      'Tempo de expiração do token conforme configuração da aplicação',
+    example: '3600s',
+  })
   expires_in: string;
 }
 
@@ -18,4 +22,3 @@ export class LoginOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

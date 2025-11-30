@@ -15,4 +15,3 @@ export class LogoutOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

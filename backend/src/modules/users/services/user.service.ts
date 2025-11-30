@@ -83,14 +83,15 @@ export class UserService {
     await this.userRepository.remove(user);
   }
 
-  async getProfileWithStats(user: User): Promise<User & {
-    receitasCriadas: number;
-    categoriasUtilizadas: number;
-  }> {
+  async getProfileWithStats(user: User): Promise<
+    User & {
+      receitasCriadas: number;
+      categoriasUtilizadas: number;
+    }
+  > {
     const receitasCriadas = await this.recipesRepository.countByUser(user.id);
-    const categoriasUtilizadas = await this.recipesRepository.countDistinctCategoriesByUser(
-      user.id,
-    );
+    const categoriasUtilizadas =
+      await this.recipesRepository.countDistinctCategoriesByUser(user.id);
     return {
       ...user,
       receitasCriadas,

@@ -48,7 +48,9 @@ describe('CategoriesService', () => {
       const dto: CreateCategoryDto = { nome: 'Doces' };
       (mockRepo.findByName as any).mockResolvedValue({ id: 2 } as any);
 
-      await expect(service.create(dto)).rejects.toBeInstanceOf(ConflictException);
+      await expect(service.create(dto)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
     });
   });
 
@@ -76,7 +78,9 @@ describe('CategoriesService', () => {
     it('deve lançar NotFoundException quando não encontrada', async () => {
       (mockRepo.findById as any).mockResolvedValue(null);
 
-      await expect(service.findOne(99)).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.findOne(99)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -114,4 +118,3 @@ describe('CategoriesService', () => {
     });
   });
 });
-

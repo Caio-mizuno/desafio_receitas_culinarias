@@ -97,7 +97,7 @@ npm run start:prod
 Acesse a documentação Swagger em:
 
 ```
-http://localhost:9561/api/docs
+http://localhost:9561/api/
 ```
 
 ## Build
@@ -164,27 +164,6 @@ backend/
 ├── docker/               # Configurações Docker
 └── docker-compose.yml    # Configuração Docker Compose
 ```
-
-## Endpoints Principais
-
-### Autenticação
-- `POST /auth/register` - Registrar novo usuário
-- `POST /auth/login` - Login de usuário
-- `GET /auth/profile` - Obter perfil do usuário autenticado
-
-### Receitas
-- `GET /recipes` - Listar receitas (com filtros e paginação)
-- `GET /recipes/:id` - Obter receita por ID
-- `POST /recipes` - Criar nova receita (autenticado)
-- `PUT /recipes/:id` - Atualizar receita (autenticado)
-- `DELETE /recipes/:id` - Deletar receita (autenticado)
-
-### Categorias
-- `GET /categories` - Listar categorias
-- `GET /categories/:id` - Obter categoria por ID
-- `POST /categories` - Criar categoria (autenticado)
-- `PUT /categories/:id` - Atualizar categoria (autenticado)
-- `DELETE /categories/:id` - Deletar categoria (autenticado)
 
 ## Troubleshooting
 

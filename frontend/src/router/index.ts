@@ -59,8 +59,22 @@ const router = createRouter({
 })
 
 // Navigation guards
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  // If user is authenticated but trying to access a protected route, validate token
+  if (authStore.isAuthenticated && to.meta.requiresAuth) {
+    try {
+      // Try to fetch profile to validate token
+      if (!authStore.user) {
+        await authStore.fetchProfile()
+      }
+    } catch (error) {
+      // Token is invalid, redirect to login
+      console.error('Invalid token, redirecting to login')
+      return next('/login')
+    }
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')

@@ -14,8 +14,27 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 function generateNome(): string {
-  const adjetivos = ['Clássica', 'Rápida', 'Deliciosa', 'Caseira', 'Especial', 'Refrescante', 'Crocante'];
-  const base = ['Salada', 'Sopa', 'Massa', 'Bolo', 'Torta', 'Sanduíche', 'Suco', 'Frango', 'Carne', 'Peixe'];
+  const adjetivos = [
+    'Clássica',
+    'Rápida',
+    'Deliciosa',
+    'Caseira',
+    'Especial',
+    'Refrescante',
+    'Crocante',
+  ];
+  const base = [
+    'Salada',
+    'Sopa',
+    'Massa',
+    'Bolo',
+    'Torta',
+    'Sanduíche',
+    'Suco',
+    'Frango',
+    'Carne',
+    'Peixe',
+  ];
   return `${pickRandom(adjetivos)} ${pickRandom(base)}`.slice(0, 45);
 }
 
@@ -90,7 +109,8 @@ async function bootstrap() {
 
     const count = parseCountArg();
     const users = await userRepo.find();
-    if (users.length === 0) throw new Error('Nenhum usuário encontrado para vincular receitas');
+    if (users.length === 0)
+      throw new Error('Nenhum usuário encontrado para vincular receitas');
     const categories = await categoryRepo.find();
 
     const createdIds: number[] = [];
@@ -119,4 +139,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-

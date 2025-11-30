@@ -19,7 +19,10 @@ describe('RecipesService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RecipesService, { provide: RecipesRepository, useValue: mockRepo }],
+      providers: [
+        RecipesService,
+        { provide: RecipesRepository, useValue: mockRepo },
+      ],
     }).compile();
 
     service = module.get<RecipesService>(RecipesService);
@@ -43,7 +46,10 @@ describe('RecipesService', () => {
 
       const result = await service.create(dto, user);
       expect(result).toEqual(entity);
-      expect(mockRepo.createEntity).toHaveBeenCalledWith({ ...dto, usuarioId: 10 });
+      expect(mockRepo.createEntity).toHaveBeenCalledWith({
+        ...dto,
+        usuarioId: 10,
+      });
       expect(mockRepo.save).toHaveBeenCalledWith(entity);
     });
   });
@@ -61,9 +67,10 @@ describe('RecipesService', () => {
 
   describe('findAllPaginated', () => {
     it('deve calcular finalPage e nextPage corretamente', async () => {
-      (mockRepo.findAllWithPagination as any).mockResolvedValue({ items: [
-        { id: 1 } as any,
-      ], total: 25 });
+      (mockRepo.findAllWithPagination as any).mockResolvedValue({
+        items: [{ id: 1 } as any],
+        total: 25,
+      });
 
       const result = await service.findAllPaginated({ page: 1, limit: 12 });
       expect(result.items.length).toBe(1);
@@ -74,7 +81,10 @@ describe('RecipesService', () => {
     });
 
     it('deve retornar nextPage null quando pagina for a última', async () => {
-      (mockRepo.findAllWithPagination as any).mockResolvedValue({ items: [], total: 24 });
+      (mockRepo.findAllWithPagination as any).mockResolvedValue({
+        items: [],
+        total: 24,
+      });
       const result = await service.findAllPaginated({ page: 2, limit: 12 });
       expect(result.finalPage).toBe(2);
       expect(result.nextPage).toBeNull();
@@ -92,7 +102,9 @@ describe('RecipesService', () => {
 
     it('deve lançar NotFoundException quando não encontrada', async () => {
       (mockRepo.findById as any).mockResolvedValue(null);
-      await expect(service.findOne(99)).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.findOne(99)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -115,7 +127,9 @@ describe('RecipesService', () => {
       const user = { id: 10 } as any;
       (mockRepo.findById as any).mockResolvedValue(entity);
 
-      await expect(service.update(1, dto, user)).rejects.toBeInstanceOf(ForbiddenException);
+      await expect(service.update(1, dto, user)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
     });
   });
 
@@ -135,8 +149,9 @@ describe('RecipesService', () => {
       const user = { id: 10 } as any;
       (mockRepo.findById as any).mockResolvedValue(entity);
 
-      await expect(service.remove(1, user)).rejects.toBeInstanceOf(ForbiddenException);
+      await expect(service.remove(1, user)).rejects.toBeInstanceOf(
+        ForbiddenException,
+      );
     });
   });
 });
-

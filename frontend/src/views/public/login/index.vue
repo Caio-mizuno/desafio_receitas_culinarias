@@ -33,7 +33,15 @@
                       label="Login"
                       prepend-inner-icon="mdi-account"
                       variant="outlined"
-                      :rules="[(v) => !!v || 'Login é obrigatório']"
+                      :rules="[
+                        (v) => !!v || 'Login é obrigatório',
+                        (v) =>
+                          (typeof v === 'string' && v.trim() !== '') ||
+                          'Login não pode ser vazio',
+                        (v) =>
+                          (typeof v === 'string' && v.trim().length >= 3) ||
+                          'Mínimo de 3 caracteres',
+                      ]"
                       required
                       class="mb-4"
                     />
@@ -43,7 +51,15 @@
                       prepend-inner-icon="mdi-lock"
                       variant="outlined"
                       type="password"
-                      :rules="[(v) => !!v || 'Senha é obrigatória']"
+                      :rules="[
+                        (v) => !!v || 'Senha é obrigatória',
+                        (v) =>
+                          (typeof v === 'string' && v.trim() !== '') ||
+                          'Senha não pode ser vazia',
+                        (v) =>
+                          (typeof v === 'string' && v.trim().length >= 5) ||
+                          'Mínimo de 5 caracteres',
+                      ]"
                       required
                       class="mb-4"
                     />
@@ -206,7 +222,12 @@ const handleLogin = async () => {
   const { valid } = await formRef.value.validate();
   if (!valid) return;
 
-  const result = await authStore.login(credentials);
+  const payload = {
+    login: credentials.login.trim(),
+    senha: credentials.senha.trim(),
+  };
+
+  const result = await authStore.login(payload);
   if (result.success) {
     router.push("/");
   }

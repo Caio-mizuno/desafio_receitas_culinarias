@@ -11,4 +11,3 @@ export class UserUpdateOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

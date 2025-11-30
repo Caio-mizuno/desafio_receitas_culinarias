@@ -29,7 +29,10 @@ export class UserController {
 
   @Public()
   @Post()
-  @ApiOkResponse({ description: 'Usuário criado com sucesso', type: UserCreateOkResponseDto })
+  @ApiOkResponse({
+    description: 'Usuário criado com sucesso',
+    type: UserCreateOkResponseDto,
+  })
   async create(@Body() createUserDto: CreateUserDto) {
     const res = await this.userService.create(createUserDto);
     return new DefaultResponseDto(res, 'Usuário criado com sucesso', true);
@@ -38,7 +41,10 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOkResponse({ description: 'Usuários listados com sucesso', type: UsersListOkResponseDto })
+  @ApiOkResponse({
+    description: 'Usuários listados com sucesso',
+    type: UsersListOkResponseDto,
+  })
   async findAll() {
     const res = await this.userService.findAll();
     return new DefaultResponseDto(res, 'Usuários listados com sucesso', true);
@@ -47,7 +53,10 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  @ApiOkResponse({ description: 'Perfil obtido com sucesso', type: UserProfileOkResponseDto })
+  @ApiOkResponse({
+    description: 'Perfil obtido com sucesso',
+    type: UserProfileOkResponseDto,
+  })
   async getProfile(@Request() req) {
     const res = await this.userService.getProfileWithStats(req.user);
     return new DefaultResponseDto(res, 'Perfil obtido com sucesso', true);
@@ -56,7 +65,10 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  @ApiOkResponse({ description: 'Usuário encontrado com sucesso', type: UserGetOkResponseDto })
+  @ApiOkResponse({
+    description: 'Usuário encontrado com sucesso',
+    type: UserGetOkResponseDto,
+  })
   async findOne(@Param('id') id: string) {
     const res = await this.userService.findOne(+id);
     return new DefaultResponseDto(res, 'Usuário encontrado com sucesso', true);
@@ -65,7 +77,10 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  @ApiOkResponse({ description: 'Usuário atualizado com sucesso', type: UserUpdateOkResponseDto })
+  @ApiOkResponse({
+    description: 'Usuário atualizado com sucesso',
+    type: UserUpdateOkResponseDto,
+  })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const res = await this.userService.update(+id, updateUserDto);
     return new DefaultResponseDto(res, 'Usuário atualizado com sucesso', true);
@@ -74,7 +89,10 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiOkResponse({ description: 'Usuário removido com sucesso', type: UserRemoveOkResponseDto })
+  @ApiOkResponse({
+    description: 'Usuário removido com sucesso',
+    type: UserRemoveOkResponseDto,
+  })
   async remove(@Param('id') id: string) {
     await this.userService.remove(+id);
     return new DefaultResponseDto(null, 'Usuário removido com sucesso', true);

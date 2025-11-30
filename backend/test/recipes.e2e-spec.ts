@@ -3,7 +3,10 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { CreateUserDto } from '../src/modules/users/dtos/create-user';
-import { CreateRecipeDto, UpdateRecipeDto } from '../src/modules/recipes/dto/recipe.dto';
+import {
+  CreateRecipeDto,
+  UpdateRecipeDto,
+} from '../src/modules/recipes/dto/recipe.dto';
 
 describe('Recipes (e2e)', () => {
   let app: INestApplication;
@@ -25,7 +28,10 @@ describe('Recipes (e2e)', () => {
       senha: 'password123',
     };
 
-    await request(app.getHttpServer()).post('/users').send(mockUser).expect(201);
+    await request(app.getHttpServer())
+      .post('/users')
+      .send(mockUser)
+      .expect(201);
 
     const loginRes = await request(app.getHttpServer())
       .post('/auth/login')
@@ -107,4 +113,3 @@ describe('Recipes (e2e)', () => {
     expect(res.body.response).toBeNull();
   });
 });
-

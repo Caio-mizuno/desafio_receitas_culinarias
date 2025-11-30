@@ -11,4 +11,3 @@ export class CategoriesListOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-

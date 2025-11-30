@@ -23,8 +23,27 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 function generateNome(): string {
-  const adjetivos = ['Clássica', 'Rápida', 'Deliciosa', 'Caseira', 'Especial', 'Refrescante', 'Crocante'];
-  const base = ['Salada', 'Sopa', 'Massa', 'Bolo', 'Torta', 'Sanduíche', 'Suco', 'Frango', 'Carne', 'Peixe'];
+  const adjetivos = [
+    'Clássica',
+    'Rápida',
+    'Deliciosa',
+    'Caseira',
+    'Especial',
+    'Refrescante',
+    'Crocante',
+  ];
+  const base = [
+    'Salada',
+    'Sopa',
+    'Massa',
+    'Bolo',
+    'Torta',
+    'Sanduíche',
+    'Suco',
+    'Frango',
+    'Carne',
+    'Peixe',
+  ];
   return `${pickRandom(adjetivos)} ${pickRandom(base)}`.slice(0, 45);
 }
 
@@ -69,27 +88,40 @@ function generateIngredientes(): string {
   return selecionados.join(', ');
 }
 
-@Command({ name: 'seed:recipes', description: 'Gerar receitas de seed', arguments: '[count]' })
+@Command({
+  name: 'seed:recipes',
+  description: 'Gerar receitas de seed',
+  arguments: '[count]',
+})
 export class SeedRecipesCommand extends CommandRunner {
   constructor(private readonly dataSource: DataSource) {
     super();
   }
 
-  @Option({ flags: '-c, --count <number>', description: 'Quantidade de receitas' })
+  @Option({
+    flags: '-c, --count <number>',
+    description: 'Quantidade de receitas',
+  })
   parseCount(val: string): number {
     const n = parseInt(val, 10);
     return Number.isNaN(n) || n <= 0 ? 1 : n;
   }
 
-  async run(passedParam: string[], options?: SeedRecipesOptions): Promise<void> {
-    const countPos = passedParam && passedParam[0] ? parseInt(passedParam[0], 10) : undefined;
-    const count = options?.count ?? (Number.isNaN(countPos!) ? undefined : countPos) ?? 1;
+  async run(
+    passedParam: string[],
+    options?: SeedRecipesOptions,
+  ): Promise<void> {
+    const countPos =
+      passedParam && passedParam[0] ? parseInt(passedParam[0], 10) : undefined;
+    const count =
+      options?.count ?? (Number.isNaN(countPos!) ? undefined : countPos) ?? 1;
     const recipeRepo = this.dataSource.getRepository(Recipe);
     const userRepo = this.dataSource.getRepository(User);
     const categoryRepo = this.dataSource.getRepository(Category);
 
     const users = await userRepo.find();
-    if (users.length === 0) throw new Error('Nenhum usuário encontrado para vincular receitas');
+    if (users.length === 0)
+      throw new Error('Nenhum usuário encontrado para vincular receitas');
     const categories = await categoryRepo.find();
 
     const createdIds: number[] = [];
@@ -111,4 +143,3 @@ export class SeedRecipesCommand extends CommandRunner {
     console.log(`Receitas criadas: ${createdIds.join(', ')}`);
   }
 }
-

@@ -31,18 +31,11 @@ export const useAuthStore = defineStore('auth', () => {
 
       return { success: true }
     } catch (err: any) {
-      // Fallback to mock authentication when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        // Mock successful login for demo purposes
-        token.value = 'mock_jwt_token_' + Date.now()
-        localStorage.setItem('auth_token', token.value)
-        user.value = {
-          id: 1,
-          login: credentials.login,
-        }
-        return { success: true }
-      }
-      error.value = err.response?.data?.message || 'Erro ao fazer login'
+      console.error('Login error:', err)
+      error.value = err.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.'
+      token.value = null
+      user.value = null
+      localStorage.removeItem('auth_token')
       return { success: false, error: error.value }
     } finally {
       loading.value = false
@@ -53,12 +46,11 @@ export const useAuthStore = defineStore('auth', () => {
     loading.value = true
 
     try {
-      await apiClient.post('/auth/logout')
-    } catch (err: any) {
-      // Ignore network errors for logout
-      if (err.code !== 'ERR_NETWORK' && !err.message?.includes('Network Error')) {
-        console.error('Erro ao fazer logout:', err)
+      if (token.value) {
+        await apiClient.post('/auth/logout')
       }
+    } catch (err: any) {
+      console.error('Erro ao fazer logout:', err)
     } finally {
       token.value = null
       user.value = null
@@ -75,13 +67,11 @@ export const useAuthStore = defineStore('auth', () => {
       await apiClient.post<DefaultResponse<User>>('/users', payload)
       return await login({ login: payload.login, senha: payload.senha })
     } catch (err: any) {
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        token.value = 'mock_jwt_token_' + Date.now()
-        localStorage.setItem('auth_token', token.value)
-        user.value = { id: 1, login: payload.login }
-        return { success: true }
-      }
+      console.error('Register error:', err)
       error.value = err.response?.data?.message || 'Erro ao cadastrar usuário'
+      token.value = null
+      user.value = null
+      localStorage.removeItem('auth_token')
       return { success: false, error: error.value }
     } finally {
       loading.value = false
@@ -94,9 +84,11 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = profile.data.response
       return profile.data.response
     } catch (err: any) {
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
-        return null
-      }
+      console.error('Fetch profile error:', err)
+      // Clear authentication on profile fetch error
+      token.value = null
+      user.value = null
+      localStorage.removeItem('auth_token')
       throw err
     }
   }

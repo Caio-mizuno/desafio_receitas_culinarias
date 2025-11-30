@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { CreateUserDto } from '../src/modules/users/dtos/create-user';
@@ -14,6 +14,14 @@ describe('AuthController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+        stopAtFirstError: true,
+      }),
+    );
     await app.init();
   });
 
@@ -57,5 +65,12 @@ describe('AuthController (e2e)', () => {
         senha: 'wrongpassword',
       })
       .expect(401);
+  });
+
+  it('/auth/login (POST) - Bad Request when payload invalid', () => {
+    return request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ login: '   ', senha: '  ' })
+      .expect(400);
   });
 });

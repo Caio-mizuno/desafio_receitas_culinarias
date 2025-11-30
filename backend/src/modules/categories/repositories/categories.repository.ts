@@ -40,7 +40,7 @@ export class CategoriesRepository {
       .createQueryBuilder('category')
       .select('category.id', 'id')
       .addSelect('category.nome', 'nome')
-      .addSelect('COUNT(recipe.id)', 'receitasContagem') 
+      .addSelect('COUNT(recipe.id)', 'receitasContagem')
       .leftJoin('category.receitas', 'recipe')
       .groupBy('category.id')
       .addGroupBy('category.nome')

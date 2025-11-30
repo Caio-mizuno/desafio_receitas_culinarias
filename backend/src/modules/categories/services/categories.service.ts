@@ -4,7 +4,11 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
-import { CategoryWithCountDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import {
+  CategoryWithCountDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from '../dto/category.dto';
 import { CategoriesRepository } from '../repositories/categories.repository';
 
 @Injectable()

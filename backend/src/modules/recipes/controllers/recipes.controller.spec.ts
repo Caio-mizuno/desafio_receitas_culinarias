@@ -97,7 +97,12 @@ describe('RecipesController', () => {
         nextPage: 2,
       });
 
-      const wrappedList = await controller.findAll(1 as any, 'Bolo', 1 as any, 12 as any);
+      const wrappedList = await controller.findAll(
+        1 as any,
+        'Bolo',
+        1 as any,
+        12 as any,
+      );
       expect(wrappedList).toEqual({
         response: items,
         page: 1,
@@ -124,7 +129,12 @@ describe('RecipesController', () => {
         nextPage: null,
       });
 
-      const wrappedList = await controller.findAll(undefined, undefined, 2 as any, 12 as any);
+      const wrappedList = await controller.findAll(
+        undefined,
+        undefined,
+        2 as any,
+        12 as any,
+      );
       expect(wrappedList).toEqual({
         response: items,
         page: 2,

@@ -17,7 +17,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CategoriesService } from '../services/categories.service';
-import { CategoryWithCountDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import {
+  CategoryWithCountDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from '../dto/category.dto';
 import { JwtAuthGuard } from '../../authentication/guards/auth.guard';
 import { Public } from 'src/common/decorators/is-public.decorator';
 import { DefaultResponseDto } from 'src/common/dtos/default-response.dto';

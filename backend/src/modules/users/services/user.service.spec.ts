@@ -43,7 +43,9 @@ describe('UserService', () => {
       const dto: CreateUserDto = { nome: 'A', login: 'a', senha: 'x' };
       (mockRepo.findByLogin as any).mockResolvedValue({ id: 1 } as any);
 
-      await expect(service.create(dto)).rejects.toBeInstanceOf(ConflictException);
+      await expect(service.create(dto)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
     });
 
     it('deve criar usuário com senha hash e retornar entidade', async () => {
@@ -51,8 +53,14 @@ describe('UserService', () => {
       const hashed = 'hashed';
       jest.spyOn(bcrypt, 'hash').mockImplementation(async () => hashed);
       (mockRepo.findByLogin as any).mockResolvedValue(null);
-      (mockRepo.createEntity as any).mockImplementation((payload: Partial<User>) => ({ id: 1, ...payload } as any));
-      (mockRepo.create as any).mockResolvedValue({ id: 1, login: 'a', senha: hashed } as any);
+      (mockRepo.createEntity as any).mockImplementation(
+        (payload: Partial<User>) => ({ id: 1, ...payload }) as any,
+      );
+      (mockRepo.create as any).mockResolvedValue({
+        id: 1,
+        login: 'a',
+        senha: hashed,
+      } as any);
 
       const result = await service.create(dto);
       expect(result.senha).toEqual(hashed);
@@ -80,7 +88,9 @@ describe('UserService', () => {
 
     it('deve lançar NotFoundException quando não encontrado', async () => {
       (mockRepo.findById as any).mockResolvedValue(null);
-      await expect(service.findOne(99)).rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.findOne(99)).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
   });
 
@@ -118,7 +128,11 @@ describe('UserService', () => {
       const dto: UpdateUserDto = { nome: 'Novo', senha: 'nova' } as any;
       jest.spyOn(bcrypt, 'hash').mockImplementation(async () => 'hashed');
       (mockRepo.findById as any).mockResolvedValue(entity);
-      (mockRepo.update as any).mockResolvedValue({ ...entity, ...dto, senha: 'hashed' } as any);
+      (mockRepo.update as any).mockResolvedValue({
+        ...entity,
+        ...dto,
+        senha: 'hashed',
+      } as any);
 
       const result = await service.update(1, dto);
       expect(result.senha).toEqual('hashed');
@@ -144,7 +158,9 @@ describe('UserService', () => {
       const categoriasUtilizadas = 3;
 
       (mockRecipesRepo.countByUser as any).mockResolvedValue(receitasCriadas);
-      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(categoriasUtilizadas);
+      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(
+        categoriasUtilizadas,
+      );
 
       const result = await service.getProfileWithStats(user);
 
@@ -154,14 +170,18 @@ describe('UserService', () => {
         categoriasUtilizadas,
       });
       expect(mockRecipesRepo.countByUser).toHaveBeenCalledWith(user.id);
-      expect(mockRecipesRepo.countDistinctCategoriesByUser).toHaveBeenCalledWith(user.id);
+      expect(
+        mockRecipesRepo.countDistinctCategoriesByUser,
+      ).toHaveBeenCalledWith(user.id);
     });
 
     it('deve retornar zeros quando usuário não tem receitas', async () => {
       const user: User = { id: 2, nome: 'New User', login: 'newuser' } as any;
 
       (mockRecipesRepo.countByUser as any).mockResolvedValue(0);
-      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(0);
+      (mockRecipesRepo.countDistinctCategoriesByUser as any).mockResolvedValue(
+        0,
+      );
 
       const result = await service.getProfileWithStats(user);
 

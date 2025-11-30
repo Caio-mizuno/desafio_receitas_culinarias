@@ -7,4 +7,3 @@ import { SeedRecipesCommand } from './seed-recipes.command';
   providers: [SeedRecipesCommand],
 })
 export class AppCliModule {}
-

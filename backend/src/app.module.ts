@@ -46,8 +46,8 @@ import { JwtAuthGuard } from './modules/authentication/guards/auth.guard';
             ? config.dbDatabaseTest
             : config.dbDatabase,
         entities: [User, Category, Recipe],
-        synchronize:true,
-        logging:true,
+        synchronize: true,
+        logging: true,
         dropSchema: false,
         migrations: [`${__dirname}/migrations/{.ts,*.js}`],
         migrationsRun: false,

@@ -10,4 +10,3 @@ export class RecipeRemoveOkResponseDto {
   @ApiProperty({ example: true })
   status: boolean;
 }
-
