@@ -2,7 +2,7 @@
   <v-card hover elevation="3" class="recipe-card" @click="$emit('view', recipe.id)">
     <v-img
       height="200"
-      src="https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=delicious%20food%20plate%20with%20fresh%20ingredients%20gourmet%20presentation&image_size=square"
+      :src="`foods/${recipe.categoriaId}.jpg`"
       cover
       class="align-end"
     >

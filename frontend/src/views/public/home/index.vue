@@ -4,17 +4,18 @@
       <v-row align="center">
         <v-col cols="12" class="hero-banner">
           <v-img
-            src="https://www.receiteria.com.br/wp-content/uploads/brioche-simples-730x480.jpeg"
+            src="/banner2.jpg"
             cover
             height="480"
             class="rounded-lg"
+            gradient="to top, rgba(0,0,0,.8), rgba(0,0,0,0)"
           >
             <div class="hero-overlay d-flex align-end pa-8">
               <div>
                 <h1 class="text-h2 font-weight-bold mb-4 text-white">
                   Descubra novas receitas
                 </h1>
-                <p class="text-subtitle-1 text-white mb-6">
+                <p class="text-subtitle-3 text-white mb-6">
                   Inspire-se com as últimas criações da comunidade e encontre sua próxima
                   refeição favorita.
                 </p>

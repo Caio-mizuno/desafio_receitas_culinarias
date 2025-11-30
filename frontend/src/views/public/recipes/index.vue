@@ -3,13 +3,41 @@
     <v-row>
       <v-col cols="12">
         <v-card class="mb-6" elevation="2">
-          <v-card-title class="text-h3 font-weight-bold mb-6"
-            >O que você quer cozinhar hoje?</v-card-title
+          <v-card-title class="text-h3 font-weight-bold">
+            <v-img
+              src="/banner4.jpg"
+              cover
+              height="480"
+              class="rounded-lg"
+              gradient="to top, rgba(0,0,0,.8), rgba(0,0,0,0)"
+            >
+              <div class="text-overlay d-flex align-end pa-8">
+                <div>
+                  <h1 class="text-h2 font-weight-bold mb-4 text-white">
+                    O que você quer cozinhar hoje?
+                  </h1>
+                  <p class="text-h5 text-white mb-6">
+                    Inspire-se e coloque a mão na massa agora!
+                  </p>
+                </div>
+              </div>
+            </v-img>
+          </v-card-title>
+          <v-alert
+            color="primary"
+            variant="tonal"
+            class=""
+            text="Encontre receitas deliciosas com base em seus ingredientes favoritos."
           >
-          <v-card-subtitle class="text-h5 font-weight-bold mb-6"
-            >Encontre receitas deliciosas com base em seus ingredientes
-            favoritos.</v-card-subtitle
-          >
+            <template v-slot:prepend>
+              <v-icon
+                icon="mdi-chef-hat"
+                size="32"
+                class="mr-3"
+                color="primary darken-2"
+              ></v-icon>
+            </template>
+          </v-alert>
           <v-card-text>
             <v-row>
               <v-col cols="12" md="6">
