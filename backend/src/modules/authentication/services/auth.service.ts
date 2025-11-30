@@ -14,7 +14,9 @@ export class AuthService {
   async signIn(login: string, pass: string): Promise<any> {
     const user = await this.userService.validateUser(login, pass);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(
+        'Usuário ou senha inválidos. Verifique e tente novamente.',
+      );
     }
     const payload = { sub: user.id, username: user.login };
     return {
