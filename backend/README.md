@@ -92,6 +92,17 @@ npm run start:prod
 
 **A API estará disponível em:** `http://localhost:3000`
 
+
+## Seed de Dados (Opcional)
+
+Para popular o banco de dados com receitas de exemplo:
+
+```bash
+cd backend
+npm run cli -- seed:recipes -c 100
+```
+
+
 ## Documentação da API
 
 Acesse a documentação Swagger em:
