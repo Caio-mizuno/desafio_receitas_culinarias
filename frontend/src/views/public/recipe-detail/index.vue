@@ -19,7 +19,7 @@
         <v-card elevation="4">
           <v-img
             height="300"
-            src="https://trae-api-us.mchost.guru/api/ide/v1/text_to_image?prompt=delicious%20food%20plate%20with%20fresh%20ingredients%20gourmet%20presentation%20professional%20photography&image_size=landscape_16_9"
+            :src="`/foods/${recipe.categoriaId}.jpg`"
             cover
           >
             <v-card-title class="text-h4 font-weight-bold bg-gradient-primary pa-4">

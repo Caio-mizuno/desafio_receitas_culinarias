@@ -4,24 +4,14 @@
       <v-col cols="12">
         <v-card class="mb-6" elevation="2">
           <v-card-title class="text-h3 font-weight-bold">
-            <v-img
+            <TopBanner
               src="/banner4.jpg"
-              cover
+              title="O que você quer cozinhar hoje?"
+              subtitle="Inspire-se e coloque a mão na massa agora!"
               height="480"
-              class="rounded-lg"
               gradient="to top, rgba(0,0,0,.8), rgba(0,0,0,0)"
-            >
-              <div class="text-overlay d-flex align-end pa-8">
-                <div>
-                  <h1 class="text-h2 font-weight-bold mb-4 text-white">
-                    O que você quer cozinhar hoje?
-                  </h1>
-                  <p class="text-h5 text-white mb-6">
-                    Inspire-se e coloque a mão na massa agora!
-                  </p>
-                </div>
-              </div>
-            </v-img>
+              :cover="true"
+            />
           </v-card-title>
           <v-alert
             color="primary"
@@ -135,6 +125,7 @@ import {
   canLoadMore,
 } from "./service";
 import "./styles.css";
+import TopBanner from "@/components/banners/TopBanner.vue";
 
 const router = useRouter();
 const route = useRoute();
