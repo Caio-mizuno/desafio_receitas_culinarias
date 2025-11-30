@@ -41,7 +41,7 @@ VITE_API_BASE_URL=http://localhost:9561
 
 ```bash
 # Iniciar o serviço frontend
-docker-compose up -d
+docker-compose up -d --build
 
 # Ver logs
 docker-compose logs -f

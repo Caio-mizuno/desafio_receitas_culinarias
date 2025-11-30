@@ -60,7 +60,7 @@ O Docker Compose irá subir o backend, nginx e MySQL automaticamente:
 
 ```bash
 # Iniciar todos os serviços
-docker-compose up -d
+docker-compose up -d --build
 
 # Ver logs
 docker-compose logs -f
@@ -204,5 +204,5 @@ Se a porta estiver em uso:
 
 ```bash
 docker-compose down -v
-docker-compose up -d
+docker-compose up -d --build
 ```
