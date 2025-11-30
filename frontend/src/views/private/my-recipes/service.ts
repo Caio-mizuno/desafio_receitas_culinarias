@@ -4,4 +4,3 @@ export async function removeRecipe(id: number) {
   const recipeStore = useRecipeStore()
   return recipeStore.deleteRecipe(id)
 }
-

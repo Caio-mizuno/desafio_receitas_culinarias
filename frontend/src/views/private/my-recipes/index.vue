@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container>
     <v-row>
@@ -57,14 +58,7 @@
         </v-row>
 
         <v-row v-else-if="myRecipes.length > 0">
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
-            v-for="recipe in myRecipes"
-            :key="recipe.id"
-          >
+          <v-col cols="12" sm="6" md="4" lg="3" v-for="recipe in myRecipes" :key="recipe.id">
             <MyRecipeCard
               :recipe="recipe"
               :categoryName="getCategoryName(recipe.categoriaId)"
@@ -75,10 +69,7 @@
           </v-col>
         </v-row>
 
-        <div
-          v-if="myRecipes.length > 0"
-          class="d-flex justify-center mt-6"
-        >
+        <div v-if="myRecipes.length > 0" class="d-flex justify-center mt-6">
           <v-pagination
             v-model="recipeStore.pagination.page"
             :length="recipeStore.pagination.totalPages"
@@ -101,11 +92,7 @@
             <p class="text-body-1 text-grey-lighten-1">
               Crie sua primeira receita clicando no botão "Nova Receita".
             </p>
-            <v-btn
-              color="primary"
-              prepend-icon="mdi-plus"
-              @click="goToCreateRecipe"
-              class="mt-4"
+            <v-btn color="primary" prepend-icon="mdi-plus" @click="goToCreateRecipe" class="mt-4"
               >Criar Primeira Receita</v-btn
             >
           </v-col>
@@ -117,14 +104,12 @@
       <v-card>
         <v-card-title class="text-h5">Confirmar Exclusão</v-card-title>
         <v-card-text
-          >Tem certeza que deseja excluir a receita "{{ recipeToDelete?.nome }}"? Esta
-          ação não pode ser desfeita.</v-card-text
+          >Tem certeza que deseja excluir a receita "{{ recipeToDelete?.nome }}"? Esta ação não pode
+          ser desfeita.</v-card-text
         >
         <v-card-actions>
           <v-spacer />
-          <v-btn color="grey" variant="text" @click="deleteDialog = false"
-            >Cancelar</v-btn
-          >
+          <v-btn color="grey" variant="text" @click="deleteDialog = false">Cancelar</v-btn>
           <v-btn
             color="error"
             variant="elevated"
@@ -139,91 +124,83 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useRecipeStore } from "@/stores/recipe.store";
-import { useCategoryStore } from "@/stores/category.store";
-import type { Recipe } from "@/types/recipe.types";
-import "./styles.css";
-import MyRecipeCard from "@/components/cards/MyRecipeCard.vue";
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useRecipeStore } from '@/stores/recipe.store'
+import { useCategoryStore } from '@/stores/category.store'
+import type { Recipe } from '@/types/recipe.types'
+import './styles.css'
+import MyRecipeCard from '@/components/cards/MyRecipeCard.vue'
 
-const router = useRouter();
-const recipeStore = useRecipeStore();
-const categoryStore = useCategoryStore();
+const router = useRouter()
+const recipeStore = useRecipeStore()
+const categoryStore = useCategoryStore()
 
-const deleteDialog = ref(false);
-const recipeToDelete = ref<Recipe | null>(null);
+const deleteDialog = ref(false)
+const recipeToDelete = ref<Recipe | null>(null)
 
-const searchTerm = ref("");
-const selectedCategory = ref<number | null>(null);
+const searchTerm = ref('')
+const selectedCategory = ref<number | null>(null)
 
-const myRecipes = computed(() => recipeStore.recipes);
+const myRecipes = computed(() => recipeStore.recipes)
 
 const getCategoryName = (categoriaId: number) => {
-  const category = categoryStore.categories.find((c) => c.id === categoriaId);
-  return category?.nome || "Sem Categoria";
-};
+  const category = categoryStore.categories.find((c) => c.id === categoriaId)
+  return category?.nome || 'Sem Categoria'
+}
 
 const goToCreateRecipe = () => {
-  router.push("/minhas-receitas/nova");
-};
+  router.push('/minhas-receitas/nova')
+}
 
 const goToEditRecipe = (id: number) => {
-  router.push(`/minhas-receitas/${id}/editar`);
-};
+  router.push(`/minhas-receitas/${id}/editar`)
+}
 
 const confirmDelete = (recipe: Recipe) => {
-  recipeToDelete.value = recipe;
-  deleteDialog.value = true;
-};
+  recipeToDelete.value = recipe
+  deleteDialog.value = true
+}
 
-  const deleteRecipe = async () => {
-    if (!recipeToDelete.value) return;
-    const result = await recipeStore.deleteRecipe(recipeToDelete.value.id);
-    if (result.success) {
-      deleteDialog.value = false;
-      recipeToDelete.value = null;
+const deleteRecipe = async () => {
+  if (!recipeToDelete.value) return
+  const result = await recipeStore.deleteRecipe(recipeToDelete.value.id)
+  if (result.success) {
+    deleteDialog.value = false
+    recipeToDelete.value = null
     await recipeStore.fetchMyRecipesPaginated(
       recipeStore.pagination.page,
       recipeStore.pagination.limit,
-      buildFilters()
-    );
-    }
-  };
+      buildFilters(),
+    )
+  }
+}
 
 const buildFilters = () => {
   return {
     nome: searchTerm.value || undefined,
     categoriaId: selectedCategory.value ?? undefined,
-  };
-};
+  }
+}
 
-  const applyFilters = async () => {
-    recipeStore.setFilters(buildFilters());
-  await recipeStore.fetchMyRecipesPaginated(
-    1,
-    recipeStore.pagination.limit,
-    buildFilters()
-  );
-  };
+const applyFilters = async () => {
+  recipeStore.setFilters(buildFilters())
+  await recipeStore.fetchMyRecipesPaginated(1, recipeStore.pagination.limit, buildFilters())
+}
 
-  const clearFiltersUI = async () => {
-    searchTerm.value = "";
-    selectedCategory.value = null;
-    recipeStore.clearFilters();
-  await recipeStore.fetchMyRecipesPaginated(1, recipeStore.pagination.limit);
-  };
+const clearFiltersUI = async () => {
+  searchTerm.value = ''
+  selectedCategory.value = null
+  recipeStore.clearFilters()
+  await recipeStore.fetchMyRecipesPaginated(1, recipeStore.pagination.limit)
+}
 
-  const changePage = async (page: number) => {
-  await recipeStore.fetchMyRecipesPaginated(
-    page,
-    recipeStore.pagination.limit,
-    buildFilters()
-  );
-  };
+const changePage = async (page: number) => {
+  await recipeStore.fetchMyRecipesPaginated(page, recipeStore.pagination.limit, buildFilters())
+}
 
 onMounted(async () => {
-  await categoryStore.fetchCategories();
-  await recipeStore.fetchMyRecipesPaginated(1, recipeStore.pagination.limit);
-});
+  await categoryStore.fetchCategories()
+  await recipeStore.fetchMyRecipesPaginated(1, recipeStore.pagination.limit)
+})
 </script>

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container>
     <v-row>
@@ -17,7 +18,7 @@
       <v-col cols="12" md="8">
         <v-card elevation="4">
           <v-card-title class="text-h5">{{
-            isEdit ? "Editar Receita" : "Nova Receita"
+            isEdit ? 'Editar Receita' : 'Nova Receita'
           }}</v-card-title>
 
           <v-card-text>
@@ -113,16 +114,14 @@
 
               <v-row>
                 <v-col cols="12" class="d-flex justify-end">
-                  <v-btn color="grey" variant="text" @click="goBack" class="mr-2"
-                    >Cancelar</v-btn
-                  >
+                  <v-btn color="grey" variant="text" @click="goBack" class="mr-2">Cancelar</v-btn>
                   <v-btn
                     type="submit"
                     color="primary"
                     :loading="recipeStore.loading"
                     :disabled="recipeStore.loading"
                   >
-                    {{ isEdit ? "Atualizar" : "Criar" }} Receita
+                    {{ isEdit ? 'Atualizar' : 'Criar' }} Receita
                   </v-btn>
                 </v-col>
               </v-row>
@@ -156,10 +155,7 @@
               </v-col>
             </v-row>
 
-            <v-row
-              v-if="recipeForm.tempoPreparoMinutos || recipeForm.porcoes"
-              class="mb-4"
-            >
+            <v-row v-if="recipeForm.tempoPreparoMinutos || recipeForm.porcoes" class="mb-4">
               <v-col cols="6" v-if="recipeForm.tempoPreparoMinutos" class="text-center">
                 <v-icon size="20" color="primary">mdi-clock-outline</v-icon>
                 <div class="text-caption">{{ recipeForm.tempoPreparoMinutos }} min</div>
@@ -189,40 +185,40 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useRecipeStore } from "@/stores/recipe.store";
-import { useCategoryStore } from "@/stores/category.store";
-import "./styles.css";
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useRecipeStore } from '@/stores/recipe.store'
+import { useCategoryStore } from '@/stores/category.store'
+import './styles.css'
 
-const router = useRouter();
-const route = useRoute();
-const recipeStore = useRecipeStore();
-const categoryStore = useCategoryStore();
+const router = useRouter()
+const route = useRoute()
+const recipeStore = useRecipeStore()
+const categoryStore = useCategoryStore()
 
-const formRef = ref();
-const isEdit = computed(() => !!route.params.id);
+const formRef = ref()
+const isEdit = computed(() => !!route.params.id)
 
 const recipeForm = reactive({
-  nome: "",
+  nome: '',
   categoriaId: null as number | null,
   tempoPreparoMinutos: null as number | null,
   porcoes: null as number | null,
-  ingredientes: "",
-  modoPreparo: "",
-});
+  ingredientes: '',
+  modoPreparo: '',
+})
 
 const getCategoryName = (categoryId: number | null) => {
-  const category = categoryStore.categories.find((c) => c.id === categoryId);
-  return category?.nome || "";
-};
+  const category = categoryStore.categories.find((c) => c.id === categoryId)
+  return category?.nome || ''
+}
 
 const loadRecipe = async () => {
-  if (!isEdit.value) return;
-  const recipeId = Number(route.params.id);
-  const result = await recipeStore.fetchRecipeById(recipeId);
+  if (!isEdit.value) return
+  const recipeId = Number(route.params.id)
+  const result = await recipeStore.fetchRecipeById(recipeId)
   if (result.success && recipeStore.currentRecipe) {
-    const recipe = recipeStore.currentRecipe;
+    const recipe = recipeStore.currentRecipe
     Object.assign(recipeForm, {
       nome: recipe.nome,
       categoriaId: recipe.categoriaId,
@@ -230,13 +226,13 @@ const loadRecipe = async () => {
       porcoes: recipe.porcoes,
       ingredientes: recipe.ingredientes,
       modoPreparo: recipe.modoPreparo,
-    });
+    })
   }
-};
+}
 
 const handleSubmit = async () => {
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
+  const { valid } = await formRef.value.validate()
+  if (!valid) return
 
   const recipeData = {
     nome: recipeForm.nome,
@@ -245,28 +241,28 @@ const handleSubmit = async () => {
     porcoes: recipeForm.porcoes!,
     ingredientes: recipeForm.ingredientes,
     modoPreparo: recipeForm.modoPreparo,
-  };
+  }
 
-  let result;
+  let result
   if (isEdit.value) {
-    result = await recipeStore.updateRecipe(Number(route.params.id), recipeData);
+    result = await recipeStore.updateRecipe(Number(route.params.id), recipeData)
   } else {
-    result = await recipeStore.createRecipe(recipeData);
+    result = await recipeStore.createRecipe(recipeData)
   }
 
   if (result.success) {
-    router.push("/minhas-receitas");
+    router.push('/minhas-receitas')
   }
-};
+}
 
 const goBack = () => {
-  router.push("/minhas-receitas");
-};
+  router.push('/minhas-receitas')
+}
 
 onMounted(async () => {
-  await categoryStore.fetchCategories();
+  await categoryStore.fetchCategories()
   if (isEdit.value) {
-    await loadRecipe();
+    await loadRecipe()
   }
-});
+})
 </script>

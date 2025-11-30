@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div>
     <v-container class="py-12">
@@ -12,12 +13,10 @@
           >
             <div class="hero-overlay d-flex align-end pa-8">
               <div>
-                <h1 class="text-h2 font-weight-bold mb-4 text-white">
-                  Descubra novas receitas
-                </h1>
+                <h1 class="text-h2 font-weight-bold mb-4 text-white">Descubra novas receitas</h1>
                 <p class="text-subtitle-3 text-white mb-6">
-                  Inspire-se com as últimas criações da comunidade e encontre sua próxima
-                  refeição favorita.
+                  Inspire-se com as últimas criações da comunidade e encontre sua próxima refeição
+                  favorita.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
                   <v-btn color="secondary" size="large" @click="goToRecipes">
@@ -60,11 +59,7 @@
               <h2 class="text-h5 font-weight-bold">
                 Receitas em {{ getCategoryName(selectedCategoryId!) }}
                 <span>
-                  <v-btn
-                    variant="text"
-                    color="primary"
-                    @click="goToRecipes"
-                    :ripple="false"
+                  <v-btn variant="text" color="primary" @click="goToRecipes" :ripple="false"
                     >Ver todas</v-btn
                   ></span
                 >
@@ -72,14 +67,7 @@
             </div>
             <v-skeleton-loader v-if="categoryLoading" type="card, card, card" />
             <v-row v-else>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-                lg="3"
-                v-for="r in categoryRecipes"
-                :key="r.id"
-              >
+              <v-col cols="12" sm="6" md="4" lg="3" v-for="r in categoryRecipes" :key="r.id">
                 <v-card class="rounded-lg w-80" hover @click="goToRecipe(r.id)">
                   <v-card-title class="text-subtitle-1 font-weight-bold">
                     {{ r.nome }}
@@ -88,8 +76,7 @@
                     <div>
                       Porções:
                       <v-chip size="small" color="secondary" variant="outlined">
-                        <v-icon class="mr-2">mdi-silverware</v-icon
-                        >{{ r.porcoes }} porções
+                        <v-icon class="mr-2">mdi-silverware</v-icon>{{ r.porcoes }} porções
                       </v-chip>
                     </div>
                     <div class="mt-2">
@@ -131,66 +118,66 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useRecipeStore } from "@/stores/recipe.store";
-import { useCategoryStore } from "@/stores/category.store";
-import { useAuthStore } from "@/stores/auth.store";
-import type { Recipe } from "@/types/recipe.types";
-import RecipesCarousel from "@/components/carousels/RecipesCarousel.vue";
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useRecipeStore } from '@/stores/recipe.store'
+import { useCategoryStore } from '@/stores/category.store'
+import { useAuthStore } from '@/stores/auth.store'
+import type { Recipe } from '@/types/recipe.types'
+import RecipesCarousel from '@/components/carousels/RecipesCarousel.vue'
 import {
   getCategoryNameFromList,
   navigateToRecipes,
   navigateToCreate,
   navigateToRecipe,
   getRecipesByCategory,
-} from "./service";
+} from './service'
 
-const router = useRouter();
-const recipeStore = useRecipeStore();
-const categoryStore = useCategoryStore();
-const authStore = useAuthStore();
+const router = useRouter()
+const recipeStore = useRecipeStore()
+const categoryStore = useCategoryStore()
+const authStore = useAuthStore()
 
-const canCreate = computed(() => authStore.isAuthenticated);
-const loading = ref(false);
-const categoryLoading = ref(false);
-const selectedCategoryId = ref<number | null>(null);
-const categoryRecipes = ref<Recipe[]>([]);
+const canCreate = computed(() => authStore.isAuthenticated)
+const loading = ref(false)
+const categoryLoading = ref(false)
+const selectedCategoryId = ref<number | null>(null)
+const categoryRecipes = ref<Recipe[]>([])
 
-const latestRecipes = ref<Recipe[]>([]);
+const latestRecipes = ref<Recipe[]>([])
 
 const topCategories = computed(() => {
-  return categoryStore.categories.slice(0, 6);
-});
+  return categoryStore.categories.slice(0, 6)
+})
 
 const getCategoryName = (categoriaId: number) =>
-  getCategoryNameFromList(categoryStore.categories, categoriaId);
+  getCategoryNameFromList(categoryStore.categories, categoriaId)
 
-const goToRecipes = () => navigateToRecipes(router);
-const goToCreate = () => navigateToCreate(router);
-const goToRecipe = (id: number) => navigateToRecipe(router, id);
+const goToRecipes = () => navigateToRecipes(router)
+const goToCreate = () => navigateToCreate(router)
+const goToRecipe = (id: number) => navigateToRecipe(router, id)
 
 const selectCategory = async (id: number) => {
-  selectedCategoryId.value = id;
-  categoryLoading.value = true;
+  selectedCategoryId.value = id
+  categoryLoading.value = true
   try {
-    categoryRecipes.value = await getRecipesByCategory(id, 5);
+    categoryRecipes.value = await getRecipesByCategory(id, 5)
   } finally {
-    categoryLoading.value = false;
+    categoryLoading.value = false
   }
-};
+}
 
 onMounted(async () => {
-  loading.value = true;
-  await Promise.all([recipeStore.fetchRecipes(), categoryStore.fetchCategories()]);
+  loading.value = true
+  await Promise.all([recipeStore.fetchRecipes(), categoryStore.fetchCategories()])
   const sorted = [...recipeStore.recipes].sort((a, b) => {
-    const da = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-    const db = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-    return db - da;
-  });
-  latestRecipes.value = sorted.slice(0, 5);
-  loading.value = false;
-});
+    const da = a.createdAt ? new Date(a.createdAt).getTime() : 0
+    const db = b.createdAt ? new Date(b.createdAt).getTime() : 0
+    return db - da
+  })
+  latestRecipes.value = sorted.slice(0, 5)
+  loading.value = false
+})
 </script>
 
 <style src="@/views/public/home/style.css" scoped></style>

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container>
     <v-row>
@@ -21,7 +22,9 @@
                   <v-icon color="primary">mdi-account</v-icon>
                 </template>
                 <v-list-item-title>Nome</v-list-item-title>
-                <v-list-item-subtitle>{{ authStore.user?.nome || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{
+                  authStore.user?.nome || 'Não informado'
+                }}</v-list-item-subtitle>
               </v-list-item>
 
               <v-list-item>
@@ -29,7 +32,9 @@
                   <v-icon color="primary">mdi-login-variant</v-icon>
                 </template>
                 <v-list-item-title>Login</v-list-item-title>
-                <v-list-item-subtitle>{{ authStore.user?.login || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{
+                  authStore.user?.login || 'Não informado'
+                }}</v-list-item-subtitle>
               </v-list-item>
 
               <v-list-item>
@@ -37,7 +42,9 @@
                   <v-icon color="primary">mdi-calendar-outline</v-icon>
                 </template>
                 <v-list-item-title>Membro desde</v-list-item-title>
-                <v-list-item-subtitle>{{ formatDate(authStore.user?.criadoEm) || 'Não informado' }}</v-list-item-subtitle>
+                <v-list-item-subtitle>{{
+                  formatDate(authStore.user?.criadoEm) || 'Não informado'
+                }}</v-list-item-subtitle>
               </v-list-item>
             </v-list>
           </v-card-text>
@@ -79,10 +86,28 @@
 
           <v-card-text>
             <v-list>
-              <v-list-item prepend-icon="mdi-book-outline" title="Minhas Receitas" subtitle="Gerenciar suas receitas" @click="goToMyRecipes" link />
-              <v-list-item prepend-icon="mdi-plus-circle-outline" title="Criar Nova Receita" subtitle="Adicionar uma nova receita" @click="goToCreateRecipe" link />
+              <v-list-item
+                prepend-icon="mdi-book-outline"
+                title="Minhas Receitas"
+                subtitle="Gerenciar suas receitas"
+                @click="goToMyRecipes"
+                link
+              />
+              <v-list-item
+                prepend-icon="mdi-plus-circle-outline"
+                title="Criar Nova Receita"
+                subtitle="Adicionar uma nova receita"
+                @click="goToCreateRecipe"
+                link
+              />
               <v-divider />
-              <v-list-item prepend-icon="mdi-logout" title="Sair" subtitle="Encerrar sessão" @click="handleLogout" link />
+              <v-list-item
+                prepend-icon="mdi-logout"
+                title="Sair"
+                subtitle="Encerrar sessão"
+                @click="handleLogout"
+                link
+              />
             </v-list>
           </v-card-text>
         </v-card>
@@ -104,7 +129,7 @@ const formatDate = (dateString?: string) => {
   return new Date(dateString).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
   })
 }
 

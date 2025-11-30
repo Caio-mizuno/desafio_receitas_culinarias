@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container>
     <v-row>
@@ -12,7 +13,6 @@
           class="mb-4"
         />
 
-
         <v-row v-if="categoryStore.loading">
           <v-col cols="12" sm="6" md="4" lg="3" v-for="n in 8" :key="n">
             <v-skeleton-loader type="card" />
@@ -20,14 +20,7 @@
         </v-row>
 
         <v-row v-else-if="categories.length > 0">
-          <v-col
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
-            v-for="category in categories"
-            :key="category.id"
-          >
+          <v-col cols="12" sm="6" md="4" lg="3" v-for="category in categories" :key="category.id">
             <v-card
               hover
               elevation="3"
@@ -50,9 +43,7 @@
 
         <v-row v-else>
           <v-col cols="12" class="text-center">
-            <v-icon size="128" color="grey-lighten-2" class="mb-4"
-              >mdi-tag-outline</v-icon
-            >
+            <v-icon size="128" color="grey-lighten-2" class="mb-4">mdi-tag-outline</v-icon>
             <h3 class="text-h5 text-grey">Nenhuma categoria encontrada</h3>
             <p class="text-body-1 text-grey-lighten-1">
               Volte mais tarde quando houver categorias disponíveis.
@@ -65,22 +56,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useCategoryStore } from "@/stores/category.store";
-import "./styles.css";
-import TopBanner from "@/components/banners/TopBanner.vue";
+import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCategoryStore } from '@/stores/category.store'
+import './styles.css'
+import TopBanner from '@/components/banners/TopBanner.vue'
 
-const router = useRouter();
-const categoryStore = useCategoryStore();
+const router = useRouter()
+const categoryStore = useCategoryStore()
 
-const categories = computed(() => categoryStore.categoriesCountRecipes);
+const categories = computed(() => categoryStore.categoriesCountRecipes)
 
 const filterByCategory = (categoryId: number) => {
-  router.push({ name: "recipes", query: { categoriaId: String(categoryId) } });
-};
+  router.push({ name: 'recipes', query: { categoriaId: String(categoryId) } })
+}
 
 onMounted(async () => {
-  await categoryStore.fetchCategoriesCount();
-});
+  await categoryStore.fetchCategoriesCount()
+})
 </script>

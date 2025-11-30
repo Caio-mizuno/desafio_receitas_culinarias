@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Recipe, RecipeFilters, PaginationInfo } from '@/types/recipe.types'
@@ -22,14 +23,12 @@ export const useRecipeStore = defineStore('recipe', () => {
     let filtered = recipes.value
 
     if (filters.value.categoriaId) {
-      filtered = filtered.filter(recipe => recipe.categoriaId === filters.value.categoriaId)
+      filtered = filtered.filter((recipe) => recipe.categoriaId === filters.value.categoriaId)
     }
 
     if (filters.value.nome) {
       const searchTerm = filters.value.nome.toLowerCase()
-      filtered = filtered.filter(recipe =>
-        recipe.nome.toLowerCase().includes(searchTerm)
-      )
+      filtered = filtered.filter((recipe) => recipe.nome.toLowerCase().includes(searchTerm))
     }
 
     return filtered
@@ -41,13 +40,19 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     try {
       const response = await apiClient.get<DefaultResponse<Recipe[]>>('/recipes', {
-        params: params || filters.value
+        params: params || filters.value,
       })
       recipes.value = response.data.response
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+      if (
+        err.code === 'ERR_NETWORK' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.includes('Network Error') ||
+        err.message?.includes('timeout') ||
+        !err.response
+      ) {
         const response = await MockService.getRecipes(params || filters.value)
         recipes.value = response.response
         return { success: true }
@@ -69,7 +74,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     try {
       const response = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes', {
-        params: { page, limit, ...(params || filters.value) }
+        params: { page, limit, ...(params || filters.value) },
       })
       recipes.value = response.data.response
       const total = response.data.total || 0
@@ -77,7 +82,7 @@ export const useRecipeStore = defineStore('recipe', () => {
       const currentPage = Math.min(Math.max(page, 1), totalPages)
       if (currentPage !== page) {
         const refetch = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes', {
-          params: { page: currentPage, limit, ...(params || filters.value) }
+          params: { page: currentPage, limit, ...(params || filters.value) },
         })
         recipes.value = refetch.data.response
       }
@@ -95,7 +100,11 @@ export const useRecipeStore = defineStore('recipe', () => {
         const totalPages = Math.max(1, Math.ceil(total / limit))
         const currentPage = Math.min(Math.max(page, 1), totalPages)
         if (currentPage !== page) {
-          const refetch = await MockService.getRecipesPaginated(currentPage, limit, params || filters.value)
+          const refetch = await MockService.getRecipesPaginated(
+            currentPage,
+            limit,
+            params || filters.value,
+          )
           recipes.value = refetch.response
         } else {
           recipes.value = response.response
@@ -125,7 +134,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     try {
       const response = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes/my', {
-        params: { page, limit, ...(params || filters.value) }
+        params: { page, limit, ...(params || filters.value) },
       })
       recipes.value = response.data.response
       const total = response.data.total || 0
@@ -133,7 +142,7 @@ export const useRecipeStore = defineStore('recipe', () => {
       const currentPage = Math.min(Math.max(page, 1), totalPages)
       if (currentPage !== page) {
         const refetch = await apiClient.get<DefaultPaginationResponse<Recipe[]>>('/recipes/my', {
-          params: { page: currentPage, limit, ...(params || filters.value) }
+          params: { page: currentPage, limit, ...(params || filters.value) },
         })
         recipes.value = refetch.data.response
       }
@@ -151,7 +160,11 @@ export const useRecipeStore = defineStore('recipe', () => {
         const totalPages = Math.max(1, Math.ceil(total / limit))
         const currentPage = Math.min(Math.max(page, 1), totalPages)
         if (currentPage !== page) {
-          const refetch = await MockService.getRecipesPaginated(currentPage, limit, params || filters.value)
+          const refetch = await MockService.getRecipesPaginated(
+            currentPage,
+            limit,
+            params || filters.value,
+          )
           recipes.value = refetch.response
         } else {
           recipes.value = response.response
@@ -181,7 +194,13 @@ export const useRecipeStore = defineStore('recipe', () => {
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+      if (
+        err.code === 'ERR_NETWORK' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.includes('Network Error') ||
+        err.message?.includes('timeout') ||
+        !err.response
+      ) {
         const response = await MockService.getRecipeById(id)
         currentRecipe.value = response.response
         return { success: true }
@@ -215,7 +234,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     try {
       const response = await apiClient.put<DefaultResponse<Recipe>>(`/recipes/${id}`, recipe)
-      const index = recipes.value.findIndex(r => r.id === id)
+      const index = recipes.value.findIndex((r) => r.id === id)
       if (index !== -1) {
         recipes.value[index] = response.data.response
       }
@@ -237,7 +256,7 @@ export const useRecipeStore = defineStore('recipe', () => {
 
     try {
       await apiClient.delete(`/recipes/${id}`)
-      recipes.value = recipes.value.filter(r => r.id !== id)
+      recipes.value = recipes.value.filter((r) => r.id !== id)
       return { success: true }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Erro ao excluir receita'

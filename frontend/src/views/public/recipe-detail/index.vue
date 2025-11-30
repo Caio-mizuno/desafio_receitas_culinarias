@@ -1,8 +1,15 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container>
     <v-row>
       <v-col cols="12">
-        <v-btn color="secondary" variant="text" prepend-icon="mdi-arrow-left" @click="goBack" class="mb-4">
+        <v-btn
+          color="secondary"
+          variant="text"
+          prepend-icon="mdi-arrow-left"
+          @click="goBack"
+          class="mb-4"
+        >
           Voltar
         </v-btn>
       </v-col>
@@ -17,11 +24,7 @@
     <v-row v-else-if="recipe">
       <v-col cols="12">
         <v-card elevation="4">
-          <v-img
-            height="300"
-            :src="`/foods/${recipe.categoriaId}.jpg`"
-            cover
-          >
+          <v-img height="300" :src="`/foods/${recipe.categoriaId}.jpg`" cover>
             <v-card-title class="text-h4 font-weight-bold bg-gradient-primary pa-4">
               {{ recipe.nome }}
             </v-card-title>
@@ -57,7 +60,9 @@
                       <span class="text-h6">Ingredientes</span>
                       <v-spacer />
                       <v-fade-transition>
-                        <v-chip v-if="!expanded" color="primary" size="small">Clique para ver</v-chip>
+                        <v-chip v-if="!expanded" color="primary" size="small"
+                          >Clique para ver</v-chip
+                        >
                       </v-fade-transition>
                     </v-row>
                   </template>
@@ -79,7 +84,9 @@
                       <span class="text-h6">Modo de Preparo</span>
                       <v-spacer />
                       <v-fade-transition>
-                        <v-chip v-if="!expanded" color="primary" size="small">Clique para ver</v-chip>
+                        <v-chip v-if="!expanded" color="primary" size="small"
+                          >Clique para ver</v-chip
+                        >
                       </v-fade-transition>
                     </v-row>
                   </template>
@@ -96,7 +103,9 @@
               <v-col cols="12">
                 <v-alert type="info" variant="tonal" icon="mdi-information-outline">
                   <template #text>
-                    <div class="text-caption">Receita criada em: {{ formatDate(recipe.createdAt) }}</div>
+                    <div class="text-caption">
+                      Receita criada em: {{ formatDate(recipe.createdAt) }}
+                    </div>
                   </template>
                 </v-alert>
               </v-col>
@@ -141,7 +150,7 @@ const goBack = () => {
 }
 
 const getCategoryName = (categoriaId: number) => {
-  const category = categoryStore.categories.find(c => c.id === categoriaId)
+  const category = categoryStore.categories.find((c) => c.id === categoriaId)
   return category?.nome || 'Sem Categoria'
 }
 
@@ -149,15 +158,11 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
   })
 }
 
 onMounted(async () => {
-  await Promise.all([
-    fetchRecipe(),
-    categoryStore.fetchCategories(),
-  ])
+  await Promise.all([fetchRecipe(), categoryStore.fetchCategories()])
 })
 </script>
-

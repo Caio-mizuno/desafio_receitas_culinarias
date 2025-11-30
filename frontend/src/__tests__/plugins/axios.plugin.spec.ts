@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import apiClient from '@/plugins/axios'
 
@@ -20,7 +21,9 @@ describe('axios plugin', () => {
     localStorage.setItem('auth_token', 'jwt')
     const rejected = (apiClient.interceptors.response as any).handlers[0].rejected
     const error = { response: { status: 401 }, config: { url: '/users' } }
-    try { await rejected(error) } catch {}
+    try {
+      await rejected(error)
+    } catch {}
     expect(localStorage.getItem('auth_token')).toBeNull()
     expect((window.location as any).replace).toHaveBeenCalledWith('/login')
   })
@@ -29,7 +32,9 @@ describe('axios plugin', () => {
     ;(window.location as any).pathname = '/login'
     const rejected = (apiClient.interceptors.response as any).handlers[0].rejected
     const error = { response: { status: 401 }, config: { url: '/auth/login' } }
-    try { await rejected(error) } catch {}
+    try {
+      await rejected(error)
+    } catch {}
     expect((window.location as any).replace).not.toHaveBeenCalled()
   })
 })

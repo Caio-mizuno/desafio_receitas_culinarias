@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import "vue3-carousel/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import RecipeCard from "@/components/cards/RecipeCard.vue";
-import type { Recipe } from "@/types/recipe.types";
+import 'vue3-carousel/carousel.css'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+import RecipeCard from '@/components/cards/RecipeCard.vue'
+import type { Recipe } from '@/types/recipe.types'
 
-defineProps<{ items: Recipe[]; getCategoryName: (id: number) => string }>();
-defineEmits<{ (e: "open", id: number): void }>();
+defineProps<{ items: Recipe[]; getCategoryName: (id: number) => string }>()
+defineEmits<{ (e: 'open', id: number): void }>()
 </script>

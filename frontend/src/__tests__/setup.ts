@@ -6,7 +6,6 @@ class ResizeObserver {
   disconnect() {}
 }
 
-// @ts-ignore
 global.ResizeObserver = global.ResizeObserver || ResizeObserver
 
 Object.defineProperty(window, 'location', {
@@ -15,7 +14,7 @@ Object.defineProperty(window, 'location', {
 })
 
 Object.defineProperty(window, 'matchMedia', {
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,

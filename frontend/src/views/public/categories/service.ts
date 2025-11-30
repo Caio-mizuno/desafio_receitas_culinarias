@@ -2,7 +2,7 @@ import { useRecipeStore } from '@/stores/recipe.store'
 
 export function getRecipeCountByCategory(categoryId: number) {
   const recipeStore = useRecipeStore()
-  return recipeStore.recipes.filter(recipe => recipe.categoriaId === categoryId).length
+  return recipeStore.recipes.filter((recipe) => recipe.categoriaId === categoryId).length
 }
 
 export function navigateToFilteredCategory(categoryId: number, push: (path: string) => void) {
@@ -10,4 +10,3 @@ export function navigateToFilteredCategory(categoryId: number, push: (path: stri
   recipeStore.setFilters({ categoriaId: categoryId })
   push('/')
 }
-

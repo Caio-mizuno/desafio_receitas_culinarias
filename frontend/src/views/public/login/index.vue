@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container fluid class="fill-height pa-0">
     <v-row align="center" justify="center" width="100%">
@@ -20,9 +21,7 @@
               <v-card-title class="text-center mb-4">
                 <v-icon size="48" color="primary" class="mb-2">mdi-chef-hat</v-icon>
                 <h1 class="text-h4 font-weight-bold">Receitas Culinárias</h1>
-                <p class="text-subtitle-1 text-grey">
-                  Entre para gerenciar suas receitas
-                </p>
+                <p class="text-subtitle-1 text-grey">Entre para gerenciar suas receitas</p>
               </v-card-title>
 
               <v-row align="stretch" class="mt-2">
@@ -36,8 +35,7 @@
                       :rules="[
                         (v) => !!v || 'Login é obrigatório',
                         (v) =>
-                          (typeof v === 'string' && v.trim() !== '') ||
-                          'Login não pode ser vazio',
+                          (typeof v === 'string' && v.trim() !== '') || 'Login não pode ser vazio',
                         (v) =>
                           (typeof v === 'string' && v.trim().length >= 3) ||
                           'Mínimo de 3 caracteres',
@@ -54,8 +52,7 @@
                       :rules="[
                         (v) => !!v || 'Senha é obrigatória',
                         (v) =>
-                          (typeof v === 'string' && v.trim() !== '') ||
-                          'Senha não pode ser vazia',
+                          (typeof v === 'string' && v.trim() !== '') || 'Senha não pode ser vazia',
                         (v) =>
                           (typeof v === 'string' && v.trim().length >= 5) ||
                           'Mínimo de 5 caracteres',
@@ -112,9 +109,7 @@
               <v-card-title class="text-center mb-4">
                 <v-icon size="48" color="primary" class="mb-2">mdi-account-plus</v-icon>
                 <h1 class="text-h4 font-weight-bold">Criar sua conta</h1>
-                <p class="text-subtitle-1 text-grey">
-                  Junte-se para salvar e gerenciar receitas
-                </p>
+                <p class="text-subtitle-1 text-grey">Junte-se para salvar e gerenciar receitas</p>
               </v-card-title>
 
               <v-form @submit.prevent="handleRegister" ref="registerFormRef">
@@ -201,53 +196,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth.store";
-import type { LoginCredentials, RegisterCredentials } from "@/types/auth.types";
-import "./styles.css";
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
+import type { LoginCredentials, RegisterCredentials } from '@/types/auth.types'
+import './styles.css'
 
-const router = useRouter();
-const authStore = useAuthStore();
+const router = useRouter()
+const authStore = useAuthStore()
 
-const isRegisterMode = ref(false);
+const isRegisterMode = ref(false)
 
-const formRef = ref();
+const formRef = ref()
 const credentials = reactive<LoginCredentials>({
-  login: "",
-  senha: "",
-});
+  login: '',
+  senha: '',
+})
 
 const handleLogin = async () => {
-  const { valid } = await formRef.value.validate();
-  if (!valid) return;
+  const { valid } = await formRef.value.validate()
+  if (!valid) return
 
   const payload = {
     login: credentials.login.trim(),
     senha: credentials.senha.trim(),
-  };
-
-  const result = await authStore.login(payload);
-  if (result.success) {
-    router.push("/");
   }
-};
 
-const registerFormRef = ref();
+  const result = await authStore.login(payload)
+  if (result.success) {
+    router.push('/')
+  }
+}
+
+const registerFormRef = ref()
 const registerForm = reactive<RegisterCredentials>({
-  nome: "",
-  login: "",
-  senha: "",
-});
-const confirmSenha = ref("");
+  nome: '',
+  login: '',
+  senha: '',
+})
+const confirmSenha = ref('')
 
 const handleRegister = async () => {
-  const { valid } = await registerFormRef.value.validate();
-  if (!valid) return;
+  const { valid } = await registerFormRef.value.validate()
+  if (!valid) return
 
-  const result = await authStore.register(registerForm);
+  const result = await authStore.register(registerForm)
   if (result.success) {
-    router.push("/");
+    router.push('/')
   }
-};
+}
 </script>

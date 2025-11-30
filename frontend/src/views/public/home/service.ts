@@ -3,7 +3,7 @@ import { useRecipeStore } from '@/stores/recipe.store'
 import type { Category } from '@/types/category.types'
 
 export const getCategoryNameFromList = (categories: Category[], categoriaId: number) => {
-  const cat = categories.find(c => c.id === categoriaId)
+  const cat = categories.find((c) => c.id === categoriaId)
   return cat?.nome || 'Categoria'
 }
 
@@ -24,4 +24,3 @@ export const getRecipesByCategory = async (categoriaId: number, limit = 5) => {
   await recipeStore.fetchRecipes({ categoriaId })
   return recipeStore.filteredRecipes.slice(0, limit)
 }
-

@@ -69,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
       if (!authStore.user) {
         await authStore.fetchProfile()
       }
-    } catch (error) {
+    } catch {
       // Token is invalid, redirect to login
       console.error('Invalid token, redirecting to login')
       return next('/login')

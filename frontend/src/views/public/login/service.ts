@@ -5,4 +5,3 @@ export async function submitLogin(credentials: LoginCredentials) {
   const authStore = useAuthStore()
   return authStore.login(credentials)
 }
-

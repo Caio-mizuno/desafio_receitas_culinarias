@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon @click="drawer = !drawer" />
 
     <v-app-bar-title>
-      <div  class="d-inline-flex ">
+      <div class="d-inline-flex">
         <div><v-icon class="mr-2">mdi-chef-hat</v-icon></div>
         <div class="font-weight-bold align-self-center">Receitas Culinárias</div>
       </div>
@@ -38,7 +38,7 @@
               <v-icon size="24">mdi-account</v-icon>
             </v-avatar>
             <div class="text-subtitle-1 font-weight-medium">
-              {{ authStore.user?.login || "Usuário" }}
+              {{ authStore.user?.login || 'Usuário' }}
             </div>
           </v-card-text>
 
@@ -87,16 +87,8 @@
   <v-navigation-drawer v-model="drawer" temporary location="start">
     <v-list>
       <v-list-item prepend-icon="mdi-home-outline" title="Home" @click="goToHome" />
-      <v-list-item
-        prepend-icon="mdi-book-outline"
-        title="Receitas"
-        @click="goToRecipes"
-      />
-      <v-list-item
-        prepend-icon="mdi-tag-outline"
-        title="Categorias"
-        @click="goToCategories"
-      />
+      <v-list-item prepend-icon="mdi-book-outline" title="Receitas" @click="goToRecipes" />
+      <v-list-item prepend-icon="mdi-tag-outline" title="Categorias" @click="goToCategories" />
 
       <v-divider />
 
@@ -111,51 +103,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/auth.store";
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
 
-const router = useRouter();
-const authStore = useAuthStore();
+const router = useRouter()
+const authStore = useAuthStore()
 
-const drawer = ref(false);
-const activeTab = ref("");
+const drawer = ref(false)
+const activeTab = ref('')
 
 const goToHome = () => {
-  drawer.value = false;
-  router.push("/");
-};
+  drawer.value = false
+  router.push('/')
+}
 
 const goToRecipes = () => {
-  drawer.value = false;
-  router.push("/receitas");
-};
+  drawer.value = false
+  router.push('/receitas')
+}
 
 const goToCategories = () => {
-  drawer.value = false;
-  router.push("/categorias");
-};
+  drawer.value = false
+  router.push('/categorias')
+}
 
 const goToMyRecipes = () => {
-  drawer.value = false;
-  router.push("/minhas-receitas");
-};
+  drawer.value = false
+  router.push('/minhas-receitas')
+}
 
 const goToProfile = () => {
-  router.push("/perfil");
-};
+  router.push('/perfil')
+}
 
 const goToLogin = () => {
-  router.push("/login");
-};
+  router.push('/login')
+}
 
 const handleLogout = async () => {
-  await authStore.logout();
-  router.push("/");
-};
-
-const goToCreateRecipe = () => {
-  drawer.value = false;
-  router.push("/minhas-receitas/nova");
-};
+  await authStore.logout()
+  router.push('/')
+}
 </script>

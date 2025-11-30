@@ -5,4 +5,3 @@ export async function logoutAndRedirect(push: (path: string) => void) {
   await authStore.logout()
   push('/')
 }
-

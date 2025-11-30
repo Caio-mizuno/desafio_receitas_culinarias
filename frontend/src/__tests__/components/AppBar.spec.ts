@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createRouter, createMemoryHistory } from 'vue-router'
@@ -22,7 +23,7 @@ describe('AppBar', () => {
     await router.push('/')
     await router.isReady()
     const wrapper = mount(Root, { global: { plugins: [vuetify, router, pinia] } })
-    const loginBtn = wrapper.findAll('button').find(b => b.text().includes('Entrar'))!
+    const loginBtn = wrapper.findAll('button').find((b) => b.text().includes('Entrar'))!
     expect(loginBtn).toBeTruthy()
   })
 
@@ -36,7 +37,9 @@ describe('AppBar', () => {
     await router.push('/')
     await router.isReady()
     const wrapper = mount(Root, { global: { plugins: [vuetify, router, pinia] } })
-    const myRecipesTab = wrapper.findAll('button').find(b => b.text().includes('Minhas Receitas'))!
+    const myRecipesTab = wrapper
+      .findAll('button')
+      .find((b) => b.text().includes('Minhas Receitas'))!
     expect(myRecipesTab).toBeTruthy()
   })
 })

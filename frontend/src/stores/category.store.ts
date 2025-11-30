@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Category, CategoryWithCountDto } from '@/types/category.types'
@@ -12,10 +13,10 @@ export const useCategoryStore = defineStore('category', () => {
   const error = ref<string | null>(null)
 
   const categoryOptions = computed(() =>
-    categories.value.map(cat => ({
+    categories.value.map((cat) => ({
       text: cat.nome,
       value: cat.id,
-    }))
+    })),
   )
 
   const fetchCategories = async () => {
@@ -28,7 +29,13 @@ export const useCategoryStore = defineStore('category', () => {
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
+      if (
+        err.code === 'ERR_NETWORK' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.includes('Network Error') ||
+        err.message?.includes('timeout') ||
+        !err.response
+      ) {
         const response = await MockService.getCategories()
         categories.value = response.response
         return { success: true }
@@ -40,19 +47,27 @@ export const useCategoryStore = defineStore('category', () => {
     }
   }
 
-   const fetchCategoriesCount = async () => {
+  const fetchCategoriesCount = async () => {
     loading.value = true
     error.value = null
 
     try {
-      const response = await apiClient.get<DefaultResponse<CategoryWithCountDto[]>>('/categories/count/recipes')
+      const response = await apiClient.get<DefaultResponse<CategoryWithCountDto[]>>(
+        '/categories/count/recipes',
+      )
       categoriesCountRecipes.value = response.data.response
       return { success: true }
     } catch (err: any) {
       // Fallback to mock data when backend is not available
-      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error') || !err.response) {
-        const response = await MockService.getCategories()
-        categories.value = response.response
+      if (
+        err.code === 'ERR_NETWORK' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.includes('Network Error') ||
+        err.message?.includes('timeout') ||
+        !err.response
+      ) {
+        const response = await MockService.getCategoriesCount()
+        categoriesCountRecipes.value = response.response
         return { success: true }
       }
       error.value = err.response?.data?.message || 'Erro ao buscar categorias'
@@ -84,7 +99,7 @@ export const useCategoryStore = defineStore('category', () => {
 
     try {
       const response = await apiClient.put<DefaultResponse<Category>>(`/categories/${id}`, category)
-      const index = categories.value.findIndex(c => c.id === id)
+      const index = categories.value.findIndex((c) => c.id === id)
       if (index !== -1) {
         categories.value[index] = response.data.response
       }
@@ -103,7 +118,7 @@ export const useCategoryStore = defineStore('category', () => {
 
     try {
       await apiClient.delete(`/categories/${id}`)
-      categories.value = categories.value.filter(c => c.id !== id)
+      categories.value = categories.value.filter((c) => c.id !== id)
       return { success: true }
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Erro ao excluir categoria'

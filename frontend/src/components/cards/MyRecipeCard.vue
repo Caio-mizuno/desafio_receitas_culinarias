@@ -1,11 +1,6 @@
 <template>
   <v-card elevation="3">
-    <v-img
-      height="200"
-      :src="`foods/${recipe.categoriaId}.jpg`"
-      cover
-      class="align-end"
-    >
+    <v-img height="200" :src="`foods/${recipe.categoriaId}.jpg`" cover class="align-end">
       <div class="w-100 d-inline-flex justify-center">
         <v-chip variant="elevated" color="primary" class="ma-2 w-80" size="small">
           <v-icon size="16" color="white" class="mr-1">mdi-tag</v-icon>
@@ -40,30 +35,23 @@
         variant="text"
         prepend-icon="mdi-pencil"
         @click.stop="$emit('edit', recipe.id)"
-      >Editar</v-btn>
+        >Editar</v-btn
+      >
       <v-btn
         color="error"
         variant="text"
         prepend-icon="mdi-delete"
         :loading="deleteLoading"
         @click.stop="$emit('delete', recipe)"
-      >Excluir</v-btn>
+        >Excluir</v-btn
+      >
     </v-card-actions>
   </v-card>
-
 </template>
 
 <script setup lang="ts">
-interface Recipe {
-  id: number;
-  nome: string;
-  tempoPreparoMinutos: number;
-  porcoes: number;
-  ingredientes: string;
-  categoriaId: number;
-}
+import type { Recipe } from '@/types/recipe.types'
 
-const props = defineProps<{ recipe: Recipe; categoryName: string; deleteLoading?: boolean }>();
-defineEmits<{ (e: 'edit', id: number): void; (e: 'delete', recipe: Recipe): void }>();
+defineProps<{ recipe: Recipe; categoryName: string; deleteLoading?: boolean }>()
+defineEmits<{ (e: 'edit', id: number): void; (e: 'delete', recipe: Recipe): void }>()
 </script>
-

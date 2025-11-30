@@ -1,7 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User, LoginCredentials, AuthResponse, DefaultResponse, RegisterCredentials } from '@/types/auth.types'
+import type {
+  User,
+  LoginCredentials,
+  AuthResponse,
+  DefaultResponse,
+  RegisterCredentials,
+} from '@/types/auth.types'
 import apiClient from '@/plugins/axios'
+import { MockService } from '@/services/mock.service'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -16,7 +24,10 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
 
     try {
-      const response = await apiClient.post<DefaultResponse<AuthResponse>>('/auth/login', credentials)
+      const response = await apiClient.post<DefaultResponse<AuthResponse>>(
+        '/auth/login',
+        credentials,
+      )
       const { access_token } = response.data.response
 
       token.value = access_token
@@ -32,7 +43,35 @@ export const useAuthStore = defineStore('auth', () => {
       return { success: true }
     } catch (err: any) {
       console.error('Login error:', err)
-      error.value = err.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.'
+
+      // Fallback to mock data when backend is not available
+      if (
+        err.code === 'ERR_NETWORK' ||
+        err.code === 'ECONNABORTED' ||
+        err.message?.includes('Network Error') ||
+        err.message?.includes('timeout') ||
+        !err.response
+      ) {
+        try {
+          const response = await MockService.login(credentials.login, credentials.senha)
+          const { access_token } = response.response
+
+          token.value = access_token
+          localStorage.setItem('auth_token', access_token)
+          user.value = { id: 1, login: credentials.login }
+
+          return { success: true }
+        } catch (mockErr: any) {
+          error.value = mockErr.message || 'Erro ao fazer login'
+          token.value = null
+          user.value = null
+          localStorage.removeItem('auth_token')
+          return { success: false, error: error.value }
+        }
+      }
+
+      error.value =
+        err.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.'
       token.value = null
       user.value = null
       localStorage.removeItem('auth_token')
@@ -89,7 +128,7 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = null
       user.value = null
       localStorage.removeItem('auth_token')
-      throw err
+      return null
     }
   }
 
