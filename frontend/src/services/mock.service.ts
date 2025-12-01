@@ -103,7 +103,7 @@ const mockRecipes: Recipe[] = [
 export class MockService {
   private static delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-  static async login(login: string, senha: string): Promise<DefaultResponse<any>> {
+  static async login(_login: string, _senha: string): Promise<DefaultResponse<any>> {
     await this.delay(1000)
 
     // Accept any credentials in mock mode for testing
