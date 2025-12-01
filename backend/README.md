@@ -108,7 +108,7 @@ Já irá adicionado o usuário caio.dev no momento que executará as migrations.
 
 ```
 login: caio.dev
-senha: 123456
+senha: admin
 ```
 
 
