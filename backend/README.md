@@ -102,6 +102,15 @@ cd backend
 npm run cli -- seed:recipes -c 100
 ```
 
+## Testar o Login (Opcional)
+
+Já irá adicionado o usuário caio.dev no momento que executará as migrations. Caso queira testar:
+
+```
+login: caio.dev
+senha: 123456
+```
+
 
 ## Documentação da API
 
