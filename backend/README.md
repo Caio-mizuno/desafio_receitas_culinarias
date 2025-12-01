@@ -145,14 +145,6 @@ npm run test:cov
 npm run test:e2e
 ```
 
-### Cobertura de Testes
-
-O projeto possui requisitos mínimos de cobertura:
-- **Branches**: 50%
-- **Functions**: 58%
-- **Lines**: 71%
-- **Statements**: 71%
-
 ## Seed de Dados
 
 Para popular o banco de dados com receitas de exemplo:
