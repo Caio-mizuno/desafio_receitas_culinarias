@@ -1,0 +1,18 @@
+services:
+  front-vue:
+    container_name: front-vue-prod
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    ports:
+      - "9011:80"
+    restart: unless-stopped
+    platform: linux/x86_64
+    deploy:
+      resources:
+        limits:
+          cpus: '3'
+          memory: 4G
+        reservations:
+          cpus: '4'
+          memory: 4G
